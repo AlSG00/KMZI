@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.button4 = new System.Windows.Forms.Button();
-            this.groupHill = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.groupFreq = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -49,7 +48,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.groupHill.SuspendLayout();
+            this.groupFreq.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,35 +62,25 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // groupHill
+            // groupFreq
             // 
-            this.groupHill.Controls.Add(this.richTextBox1);
-            this.groupHill.Controls.Add(this.listBox1);
-            this.groupHill.Controls.Add(this.label3);
-            this.groupHill.Controls.Add(this.label2);
-            this.groupHill.Controls.Add(this.button5);
-            this.groupHill.Controls.Add(this.button3);
-            this.groupHill.Controls.Add(this.sampleBox);
-            this.groupHill.Controls.Add(this.sortedBox);
-            this.groupHill.Controls.Add(this.textBox2);
-            this.groupHill.Controls.Add(this.textBox1);
-            this.groupHill.Controls.Add(this.button1);
-            this.groupHill.Controls.Add(this.label1);
-            this.groupHill.Controls.Add(this.button2);
-            this.groupHill.Location = new System.Drawing.Point(12, 12);
-            this.groupHill.Name = "groupHill";
-            this.groupHill.Size = new System.Drawing.Size(539, 507);
-            this.groupHill.TabIndex = 35;
-            this.groupHill.TabStop = false;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(366, 238);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(73, 78);
-            this.richTextBox1.TabIndex = 21;
-            this.richTextBox1.Text = "";
+            this.groupFreq.Controls.Add(this.listBox1);
+            this.groupFreq.Controls.Add(this.label3);
+            this.groupFreq.Controls.Add(this.label2);
+            this.groupFreq.Controls.Add(this.button5);
+            this.groupFreq.Controls.Add(this.button3);
+            this.groupFreq.Controls.Add(this.sampleBox);
+            this.groupFreq.Controls.Add(this.sortedBox);
+            this.groupFreq.Controls.Add(this.textBox2);
+            this.groupFreq.Controls.Add(this.textBox1);
+            this.groupFreq.Controls.Add(this.button1);
+            this.groupFreq.Controls.Add(this.label1);
+            this.groupFreq.Controls.Add(this.button2);
+            this.groupFreq.Location = new System.Drawing.Point(12, 12);
+            this.groupFreq.Name = "groupFreq";
+            this.groupFreq.Size = new System.Drawing.Size(539, 507);
+            this.groupFreq.TabIndex = 35;
+            this.groupFreq.TabStop = false;
             // 
             // listBox1
             // 
@@ -104,7 +93,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(64, 267);
+            this.label3.Location = new System.Drawing.Point(6, 267);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(24, 13);
             this.label3.TabIndex = 20;
@@ -113,11 +102,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(42, 241);
+            this.label2.Location = new System.Drawing.Point(6, 228);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
+            this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 19;
-            this.label2.Text = "Замена";
+            this.label2.Text = "Замена:";
             // 
             // button5
             // 
@@ -131,9 +120,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(94, 290);
+            this.button3.Location = new System.Drawing.Point(6, 309);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(266, 26);
+            this.button3.Size = new System.Drawing.Size(433, 26);
             this.button3.TabIndex = 18;
             this.button3.Text = "Преобразовать";
             this.button3.UseVisualStyleBackColor = true;
@@ -141,24 +130,24 @@
             // 
             // sampleBox
             // 
-            this.sampleBox.Location = new System.Drawing.Point(94, 264);
+            this.sampleBox.Location = new System.Drawing.Point(6, 283);
             this.sampleBox.Name = "sampleBox";
-            this.sampleBox.Size = new System.Drawing.Size(266, 20);
+            this.sampleBox.Size = new System.Drawing.Size(433, 20);
             this.sampleBox.TabIndex = 17;
             // 
             // sortedBox
             // 
-            this.sortedBox.Location = new System.Drawing.Point(94, 238);
+            this.sortedBox.Location = new System.Drawing.Point(6, 244);
             this.sortedBox.Name = "sortedBox";
-            this.sortedBox.Size = new System.Drawing.Size(266, 20);
+            this.sortedBox.Size = new System.Drawing.Size(433, 20);
             this.sortedBox.TabIndex = 16;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(7, 336);
+            this.textBox2.Location = new System.Drawing.Point(7, 349);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(432, 155);
+            this.textBox2.Size = new System.Drawing.Size(432, 139);
             this.textBox2.TabIndex = 9;
             this.textBox2.Text = "";
             // 
@@ -206,26 +195,26 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(557, 22);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Current";
-            series2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.ForwardDiagonal;
-            series2.BackImageTransparentColor = System.Drawing.Color.Transparent;
-            series2.BackSecondaryColor = System.Drawing.Color.White;
-            series2.BorderColor = System.Drawing.Color.White;
-            series2.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.NotSet;
-            series2.ChartArea = "ChartArea1";
-            series2.Color = System.Drawing.Color.Salmon;
-            series2.Legend = "Legend1";
-            series2.Name = "Sample";
-            this.chart1.Series.Add(series1);
-            this.chart1.Series.Add(series2);
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Current";
+            series6.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.ForwardDiagonal;
+            series6.BackImageTransparentColor = System.Drawing.Color.Transparent;
+            series6.BackSecondaryColor = System.Drawing.Color.White;
+            series6.BorderColor = System.Drawing.Color.White;
+            series6.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.NotSet;
+            series6.ChartArea = "ChartArea1";
+            series6.Color = System.Drawing.Color.Salmon;
+            series6.Legend = "Legend1";
+            series6.Name = "Sample";
+            this.chart1.Series.Add(series5);
+            this.chart1.Series.Add(series6);
             this.chart1.Size = new System.Drawing.Size(982, 497);
             this.chart1.TabIndex = 46;
             this.chart1.Text = "chart1";
@@ -237,11 +226,11 @@
             this.ClientSize = new System.Drawing.Size(1556, 582);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.groupHill);
+            this.Controls.Add(this.groupFreq);
             this.Name = "Freq";
             this.Text = "Частотный криптоанализ";
-            this.groupHill.ResumeLayout(false);
-            this.groupHill.PerformLayout();
+            this.groupFreq.ResumeLayout(false);
+            this.groupFreq.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 
@@ -250,7 +239,7 @@
         #endregion
 
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.GroupBox groupHill;
+        private System.Windows.Forms.GroupBox groupFreq;
         private System.Windows.Forms.RichTextBox textBox2;
         private System.Windows.Forms.RichTextBox textBox1;
         private System.Windows.Forms.Button button1;
@@ -264,7 +253,6 @@
         private System.Windows.Forms.TextBox sortedBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ListBox listBox1;
     }
 }
