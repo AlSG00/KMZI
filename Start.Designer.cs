@@ -45,6 +45,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.groupStartButtons = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
@@ -57,7 +58,6 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupStartButtons.SuspendLayout();
             this.SuspendLayout();
@@ -221,6 +221,16 @@
             this.groupStartButtons.TabIndex = 6;
             this.groupStartButtons.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 483);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(222, 23);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "***";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // button19
             // 
             this.button19.Location = new System.Drawing.Point(6, 454);
@@ -341,16 +351,6 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 483);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(222, 23);
-            this.button1.TabIndex = 26;
-            this.button1.Text = "***";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Start
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -359,7 +359,8 @@
             this.Controls.Add(this.groupStartButtons);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(0, 567);
+            this.MaximumSize = new System.Drawing.Size(268, 598);
+            this.MinimumSize = new System.Drawing.Size(268, 598);
             this.Name = "Start";
             this.Text = "Атбаш";
             this.menuStrip1.ResumeLayout(false);

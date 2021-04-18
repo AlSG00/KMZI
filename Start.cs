@@ -33,7 +33,7 @@ namespace KMZI
             button15.Enabled = true;    //Вернам
             button16.Enabled = true;    //Частотный криптоанализ
             button17.Enabled = false;   //Криптоанализ полиалфавитных шифров
-            button18.Enabled = false;   //Гаммирование
+            button18.Enabled = true;    //Гаммирование
             button19.Enabled = false;   //***
             button1.Enabled = false;    //***
 

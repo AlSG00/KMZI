@@ -39,14 +39,26 @@ namespace KMZI
         bool isRussian = false;
         bool textError = false;
 
+        // Первичная обработка текста
         private void button2_Click(object sender, EventArgs e)
         {
             temp_f = 0f;
 
+            sortedBox.Clear();
+            sampleBox.Clear();
+            textBox2.Clear();
+
             isRussian = check_language(textBox1.Text); // Смотрим, какой язык будет испоьлзоваться в дальнейшей работе
 
-            language_setup(); // Исходя из функции выше, проводим первоначальную настройку
-
+            if (!textError)
+            {
+                language_setup(); // Исходя из функции выше, проводим первоначальную настройку
+            }
+            else
+            {
+                MessageBox.Show("Загруженный текст не поддается обработке", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                return;
+            }
             this.chart1.Series["Sample"].Points.Clear();
             this.chart1.Series["Current"].Points.Clear();
 
@@ -73,9 +85,63 @@ namespace KMZI
 
             textBox1.Text = textBox1.Text.ToLower();
 
+            for(int i = 0; i < alphabet.Length; i++)
+            {
+                sortedBox.Text += alphabet_sorted[i];
+                sampleBox.Text += alphabet_sample[i];
+            }
+            update_listBox();
+
+            this.chart1.Series["Current"].Points.Clear();
+            hystogram_generate_current(alphabet, alphabet_freq);
+        }
+
+        //Конечное преобразовние текста
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox2.Clear();
+            
+
+            if (sortedBox.TextLength < alphabet_sorted.Length)
+            {
+                for (int j = 0; j < alphabet_sorted.Length; j++)
+                {
+                    if (!sortedBox.Text.Contains(alphabet_sorted[j]))
+                    {
+                        sortedBox.Text += alphabet_sorted[j];
+                        if (sortedBox.TextLength == alphabet_sorted.Length)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+            }
+            if (sampleBox.TextLength < alphabet_sample.Length)
+            {
+                for (int j = 0; j < alphabet_sample.Length; j++)
+                {
+                    if (!sampleBox.Text.Contains(alphabet_sample[j]))
+                    {
+                        sampleBox.Text += alphabet_sample[j];
+                        if (sampleBox.TextLength == alphabet_sample.Length)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < alphabet.Length; i++)
+            {
+                alphabet_sample[i] = sampleBox.Text[i];
+                alphabet_sorted[i] = sortedBox.Text[i];
+            }
+
             for (int i = 0; i < textBox1.TextLength; i++)
             {
-                if (alphabet.Contains(textBox1.Text[i]))
+                if (alphabet_sorted.Contains(textBox1.Text[i]))
                 {
                     textBox2.Text += alphabet_sample[Array.IndexOf(alphabet_sorted, textBox1.Text[i])];
                 }
@@ -85,9 +151,9 @@ namespace KMZI
                 }
             }
             alphabet_freq = calculate_frequency(textBox2.Text, alphabet);
-
             this.chart1.Series["Current"].Points.Clear();
             hystogram_generate_current(alphabet, alphabet_freq);
+            update_listBox();
         }
 
         public void hystogram_generate_sample(char[] alphabet, char[] sample, float[] sample_freq, string series)
@@ -184,6 +250,7 @@ namespace KMZI
             else
             {
                 MessageBox.Show("Загруженный текст не поддается обработке", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+
             }
         }
 
@@ -211,17 +278,22 @@ namespace KMZI
             }
         }
 
+        void update_listBox()
+        {
+            listBox1.Items.Clear();
+            for (int i = 0; i < alphabet.Length; i++)
+            {
+                string listBoxText = sortedBox.Text[i].ToString() + " -> " + sampleBox.Text[i].ToString();
+                listBox1.Items.Add(listBoxText);
+            }
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chart1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
 
         }
