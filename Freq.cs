@@ -124,8 +124,7 @@ namespace KMZI
         private void button3_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
-            
-
+           
             if (sortedBox.TextLength < alphabet_sorted.Length)
             {
                 for (int j = 0; j < alphabet_sorted.Length; j++)
@@ -248,13 +247,13 @@ namespace KMZI
         }
 
         // Кнопка "Открыть файл"
-        private void button5_Click(object sender, EventArgs e)
+        public void button5_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();         
         }
 
         // Открытие и чтение содержимого файла
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        public void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             StreamReader str = new StreamReader(openFileDialog1.FileName);
 

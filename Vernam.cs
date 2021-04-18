@@ -135,7 +135,7 @@ namespace KMZI
             return array;
         }
 
-        byte[] convert_to_decimal(string[] array)
+        public byte[] convert_to_decimal(string[] array)
         {
             byte[] answer = new byte[array.Length];
             int answer_byte = 0;
