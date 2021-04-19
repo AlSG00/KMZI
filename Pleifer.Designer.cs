@@ -31,10 +31,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.groupPleifer = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.processBox = new System.Windows.Forms.RichTextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.keyBox = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,7 +44,6 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.processBox = new System.Windows.Forms.RichTextBox();
             this.groupPleifer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,10 +72,6 @@
             // groupPleifer
             // 
             this.groupPleifer.Controls.Add(this.processBox);
-            this.groupPleifer.Controls.Add(this.label7);
-            this.groupPleifer.Controls.Add(this.label6);
-            this.groupPleifer.Controls.Add(this.label5);
-            this.groupPleifer.Controls.Add(this.label4);
             this.groupPleifer.Controls.Add(this.listBox1);
             this.groupPleifer.Controls.Add(this.keyBox);
             this.groupPleifer.Controls.Add(this.label3);
@@ -97,41 +89,14 @@
             this.groupPleifer.TabIndex = 31;
             this.groupPleifer.TabStop = false;
             // 
-            // label7
+            // processBox
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(349, 18);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 13);
-            this.label7.TabIndex = 19;
-            this.label7.Text = "label7";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(334, 18);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(9, 13);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "|";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(308, 18);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 17;
-            this.label5.Text = "label5";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(46, 18);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "label4";
+            this.processBox.Location = new System.Drawing.Point(272, 82);
+            this.processBox.Name = "processBox";
+            this.processBox.ReadOnly = true;
+            this.processBox.Size = new System.Drawing.Size(260, 44);
+            this.processBox.TabIndex = 20;
+            this.processBox.Text = "";
             // 
             // listBox1
             // 
@@ -246,15 +211,6 @@
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
-            // processBox
-            // 
-            this.processBox.Location = new System.Drawing.Point(272, 82);
-            this.processBox.Name = "processBox";
-            this.processBox.ReadOnly = true;
-            this.processBox.Size = new System.Drawing.Size(260, 44);
-            this.processBox.TabIndex = 20;
-            this.processBox.Text = "";
-            // 
             // Pleifer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,10 +234,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.GroupBox groupPleifer;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.RichTextBox keyBox;
         private System.Windows.Forms.Label label3;

@@ -159,10 +159,9 @@
             this.textBox2.Location = new System.Drawing.Point(6, 237);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(349, 102);
+            this.textBox2.Size = new System.Drawing.Size(515, 102);
             this.textBox2.TabIndex = 9;
             this.textBox2.Text = "";
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // textBox1
             // 
@@ -176,7 +175,7 @@
             // 
             this.button3.Location = new System.Drawing.Point(6, 495);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(275, 26);
+            this.button3.Size = new System.Drawing.Size(515, 26);
             this.button3.TabIndex = 7;
             this.button3.Text = "Очистить историю";
             this.button3.UseVisualStyleBackColor = true;
@@ -215,7 +214,7 @@
             this.listBox2.FormattingEnabled = true;
             this.listBox2.Location = new System.Drawing.Point(6, 358);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(349, 134);
+            this.listBox2.Size = new System.Drawing.Size(515, 134);
             this.listBox2.TabIndex = 6;
             this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
@@ -281,7 +280,7 @@
             this.radioButton4.UseVisualStyleBackColor = true;
             this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
             // 
-            // Form7
+            // Kardano
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -290,7 +289,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupKardano);
-            this.Name = "Form7";
+            this.Name = "Kardano";
             this.Text = "Кардано";
             this.groupKardano.ResumeLayout(false);
             this.groupKardano.PerformLayout();

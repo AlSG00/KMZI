@@ -28,13 +28,13 @@ namespace KMZI
 
 
         int count = 0;
-
         string text_temp = null;
         string key_temp = null;
         string answer_temp = null;
 
         Random rnd = new Random();
 
+        // Кнопка "Преобразовать"
         private void button2_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
@@ -61,7 +61,7 @@ namespace KMZI
 
             for (int i = 0; i < textBox1.TextLength; i++)
             {
-                if (alphabet.Contains(textBox1.Text[i]))
+                if (alphabet.Contains(textBox1.Text[i])) // Преобразуем строку в числа
                 {
                     text_byte[i] = Convert.ToByte(Array.IndexOf(alphabet, textBox1.Text[i]));
                 }
@@ -73,8 +73,10 @@ namespace KMZI
                 }
             }
 
+            // Преобразуем ранее полученную числовую строку в двоичный код
             text_binary = convert_to_binary(textBox1.TextLength, text_byte);
 
+            // Циклом докопировали код до нужной длины
             while (keyBoxProcessed.TextLength < textBox1.TextLength)
             {
                 keyBoxProcessed.Text += keyBox.Text[count % keyBox.TextLength];
@@ -82,6 +84,8 @@ namespace KMZI
             }
             count = 0;
 
+
+            // Числовое преобразование ключа
             for (int i = 0; i < textBox1.TextLength; i++)
             {
                 if (alphabet.Contains(keyBoxProcessed.Text[i]))
@@ -94,12 +98,16 @@ namespace KMZI
                 }
             }
 
+            // Преобразование ключа в двоичный код
             key_binary = convert_to_binary(keyBoxProcessed.TextLength, key_byte);
 
+            // Шифрование текста
             answer_binary = convert_xor(text_binary, key_binary);
 
+            // Преобразование двоичного результата шифрования в десятичные числа
             answer_byte = convert_to_decimal(answer_binary);
 
+            // Преобразование числовой строки в символы
             for (int i = 0; i < answer_byte.Length; i++)
             {
                 if (symbol_pos[i] == 0)
@@ -111,35 +119,31 @@ namespace KMZI
                     textBox2.Text += symbol[i];
                 }
             }
-
-
             listBox2.Items.Add(textBox1.Text);
             listBox2.Items.Add(textBox2.Text);
             listBox1.Items.Add(keyBox.Text);
         }
 
+        // Преобразование в двоичное число
         string[] convert_to_binary(int length, byte[] b_text)
         {
             string[] array = new string[length];
-
             for (int i = 0; i < b_text.Length; i++)
             {
                 array[i] = Convert.ToString(b_text[i], 2);
-
                 while (array[i].Length < 8)
                 {
                     array[i] = array[i].Insert(0, "0");
                 }
             }
-
             return array;
         }
 
+        // Преобразование в десятичное число
         public byte[] convert_to_decimal(string[] array)
         {
             byte[] answer = new byte[array.Length];
             int answer_byte = 0;
-
             text_temp = null;
 
             for(int i = 0; i < array.Length; i++)
@@ -153,7 +157,6 @@ namespace KMZI
                         answer_byte += Convert.ToByte(Math.Pow(2, 7 - j));
                     }
                 }
-
                 answer[i] = Convert.ToByte(answer_byte % alphabet.Length);
                 answer_byte = 0;
             }
@@ -161,6 +164,7 @@ namespace KMZI
             return answer;
         }
 
+        // Исключающее ИЛИ
         public string[] convert_xor(string[] text, string[] key)
         {
             string[] answer = new string[text.Length];
@@ -185,28 +189,27 @@ namespace KMZI
                     }
                 }
                 answer[i] = answer_temp;
-
                 text_temp = null;
                 key_temp = null;
                 answer_temp = null;
             }
-
             return answer;
         }
 
-
-
+        // Кнопка "Закрыть"
         private void button4_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Кнопка "Очистить историю"
         private void button3_Click(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
             listBox2.Items.Clear();
         }
 
+        // Если содержимое поля ввоа текста изменилось
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (textBox1.TextLength > 0)
@@ -217,10 +220,10 @@ namespace KMZI
             {
                 keyBox.Enabled = false;
                 button2.Enabled = false;
-
             }
         }
 
+        // Если содержимое поля ввода ключа изменилось
         private void keyBox_TextChanged(object sender, EventArgs e)
         {
             if (keyBox.TextLength > 0)
@@ -233,18 +236,21 @@ namespace KMZI
             }
         }
 
+        // Если изменилось состояние радиальной кнопки "Зашифровать"
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox1.Clear();
             textBox1.Text += listBox2.SelectedItem;
         }
 
+        // Выбран элемент из истории ключей
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             keyBox.Clear();
             keyBox.Text += listBox1.SelectedItem;
         }
 
+        // Выбран элемент из истории сообщений
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Clear();

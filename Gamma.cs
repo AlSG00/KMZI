@@ -27,16 +27,22 @@ namespace KMZI
         // Кнопка "Открыть файл"
         private void button3_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();
+            openFileDialog1.ShowDialog(); // как открывать файлы разны форматов??????
         }
 
         // Чтение файла и вывод содержимого в textBox1
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            textBox1.Text = System.IO.File.ReadAllText(openFileDialog1.FileName);
-            //StreamReader str = new StreamReader(openFileDialog1.FileName);
+            //textBox1.Text = System.IO.File.ReadAllText(openFileDialog1.FileName);
+            //StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
             //textBox1.Clear();
             //textBox1.Text += str.ReadToEnd();
+            byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
+            for(int i = 0; i < byteArray.Length; i++)
+            {
+                textBox1.Text += byteArray[i];
+
+            }
         }
 
         // Кнопка "Сохранить файл"

@@ -15,20 +15,34 @@ namespace KMZI
         public Pleifer()
         {
             InitializeComponent();
+
             button2.Enabled = false;
             groupPleifer.Enabled = false;
             keyBox.Enabled = false;
         }
-        char[] rus = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
-        char[] RUS = { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я' };
-        char[] eng = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-        char[] ENG = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        char[] rus = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 
+                       'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 
+                       'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 
+                       'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+        char[] RUS = { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 
+                       'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 
+                       'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 
+                       'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я' };
+
+        char[] eng = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
+                       'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
+                       's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
+        char[] ENG = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
+                       'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 
+                       'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
         char[,] m_rus = { { 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з' },
                           { 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п' },
                           { 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч' },
-                          { 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' } };                                     // ОПИСАНИЕ
-                                                                                                // Идём по введённой строчке и запоминаем координаты найденных символов
+                          { 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' } };                                    
+                                                                                                
         char[,] m_RUS = { { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З' },
                           { 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П' },
                           { 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч' },
@@ -52,9 +66,7 @@ namespace KMZI
         bool contains = false;
         bool get1 = false;
         bool get2 = false;
-
-
-        char[,] alphabet_temp = null;
+        char[,] alphabet_new = null;
         char[,] alphabet_current = null;
         char[] non_alphabet = null;
         int[] non_alphabet_pos = null;
@@ -69,10 +81,10 @@ namespace KMZI
         int[] pos1 = null;
         int[] pos2 = null;
         string temp = null;
-        string symbol = null;
-
+        
         int count = 0;
 
+        // Кнопка "Зашифровать / Расшифровать"
         private void button2_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
@@ -83,18 +95,19 @@ namespace KMZI
             position_of_x_temp = null;
             non_alphabet_pos_temp = null;
             non_alphabet_temp = null;
-
+            alphabet_new = null;
+            string symbol = null;
             temp = null;
             pos1 = new int[2];
             pos2 = new int[2];
             count = 0;
 
-            processBox.Text = textBox1.Text;
-            keyBox.Text = replace_missing_letters(keyBox.Text);//в ключе заменяем буквы, который нет в текущем алфивите
-            processBox.Text = replace_missing_letters(textBox1.Text);// то же и в самом тексте
+            processBox.Text = textBox1.Text; // пересылаем текст во вспомогательное поле во избежание прчи оригинала
+            keyBox.Text = replace_missing_letters(keyBox.Text);
+            processBox.Text = replace_missing_letters(textBox1.Text);
 
-            alphabet_temp = null;
 
+            // Какой символ будет вставляться в биграммы
             if (Eng == true)
             {
                 alphabet_current = m_eng;
@@ -106,6 +119,7 @@ namespace KMZI
                 symbol = "х"; // русская х
             }
 
+            // Вносим алфавит во временную строку
             for (int i = 0; i < alphabet_current.GetLength(0); i++)
             {
                 for (int j = 0; j < alphabet_current.GetLength(1); j++)
@@ -114,24 +128,22 @@ namespace KMZI
                 }
             }
 
-            temp = alphabet_processing(keyBox.Text.ToLower());//обработка алфавита в стиле альберти
+            temp = alphabet_processing(keyBox.Text.ToLower()); // Преобразование алфавита в стиле альберти
 
-            alphabet_temp = new char[alphabet_current.GetLength(0), alphabet_current.GetLength(1)];
-
+            // Результат преобразования перене
+            alphabet_new = new char[alphabet_current.GetLength(0), alphabet_current.GetLength(1)];
             for (int i = 0; i < alphabet_current.GetLength(0); i++)
             {
                 for (int j = 0; j < alphabet_current.GetLength(1); j++)
                 {
-                    alphabet_temp[i, j] = temp[count];
+                    alphabet_new[i, j] = temp[count];
                     count++;
                 }
             }
 
-
-            /*Шифрование--------------------------------------------------------------------------------------------------------------------------------------------*/
+            // Шифрование
             if (radioButton1.Checked == true)
             {
-                //alphabet_temp = null;
                 position_of_spaceButton = null;
                 non_alphabet = null;
                 non_alphabet_pos = null;
@@ -139,49 +151,17 @@ namespace KMZI
                 position_of_x = null;
                 contains = false;
 
-                //if (Eng == true)
-                //{
-                //    alphabet_current = m_eng;
-                //    symbol = "x"; //английская х
-                //}
-                //else
-                //{
-                //    alphabet_current = m_rus;
-                //    symbol = "х"; // русская х
-                //}
-
-                //for (int i = 0; i < alphabet_current.GetLength(0); i++)
-                //{
-                //    for (int j = 0; j < alphabet_current.GetLength(1); j++)
-                //    {
-                //        temp += alphabet_current[i, j].ToString();
-                //    }
-                //}
-
-                //temp = alphabet_processing(keyBox.Text.ToLower());//обработка алфавита в стиле альберти
-
-                //alphabet_temp = new char[alphabet_current.GetLength(0), alphabet_current.GetLength(1)];
-
-                //for (int i = 0; i < alphabet_current.GetLength(0); i++)
-                //{
-                //    for (int j = 0; j < alphabet_current.GetLength(1); j++)
-                //    {
-                //        alphabet_temp[i, j] = temp[count];
-                //        count++;
-                //    }
-                //}
-
-
+                // Проверяем, присутствует ли символ в новом алфавите
                 for (int i = 0; i < processBox.TextLength; i++)
                 {
                     contains = false;
-                    for (int m = 0; m < alphabet_temp.GetLength(0); m++)
+                    for (int m = 0; m < alphabet_new.GetLength(0); m++)
                     {
-                        for (int n = 0; n < alphabet_temp.GetLength(1); n++)
+                        for (int n = 0; n < alphabet_new.GetLength(1); n++)
                         {
-                            if (char.ToLower(processBox.Text[i]) == alphabet_temp[m, n] || processBox.Text[i] == ' ')
+                            if (char.ToLower(processBox.Text[i]) == alphabet_new[m, n] || processBox.Text[i] == ' ')
                             {
-                                contains = true;
+                                contains = true; // Всё тип-топ, символ содержится в алфавите
                                 break;
                             }
                         }
@@ -190,8 +170,11 @@ namespace KMZI
                             break;
                         }
                     }
-                    if (contains == false)
+                    if (contains == false) // Ессли символ не нашёлся в алфавите
                     {
+                        /*Делаем два массива:
+                         В одном запоминаем ненайденный символ
+                         В другом - его позицию в тексте*/
                         if (non_alphabet == null)
                         {
                             non_alphabet = new char[1];
@@ -214,11 +197,10 @@ namespace KMZI
                             non_alphabet_pos[non_alphabet_pos.Length - 1] = i;
                         }
                     }
+                    // Громоздко из-за динамического расширения массива
                 }
-                //for (int i = non_alphabet_pos.Length - 1; i >= 0; i--)
-                //{
-                //    textBox2.Text = textBox2.Text.Remove(non_alphabet_pos[i], 1);
-                //}
+
+                // Символы, не содержащиеся в алфавите, заменяем на ""
                 if (non_alphabet != null)
                 {
                     for (int i = 0; i < non_alphabet.Length; i++)
@@ -227,9 +209,10 @@ namespace KMZI
                     }
                 }
 
-                for (int i = 0; i < processBox.TextLength; i++)// запоминаем позиции
-                {                   
-                    if (processBox.Text[i] == ' ')                   //запоминаем  позиции пробелов в тексте с применением расширения массива с использованием временного массива
+                // По аналлогии с функцией выше, запоммним позиции пробелов в тексте и заменим их на ""
+                for (int i = 0; i < processBox.TextLength; i++)
+                {
+                    if (processBox.Text[i] == ' ')
                     {
                         if (position_of_spaceButton == null)
                         {
@@ -245,8 +228,9 @@ namespace KMZI
                             position_of_spaceButton[position_of_spaceButton.Length - 1] = i;
                         }
                     }
-                    
-                    if(char.IsUpper(processBox.Text[i]))
+
+                    // Запоминаем позиции Прописных букв
+                    if (char.IsUpper(processBox.Text[i]))
                     {
                         if (position_of_upper == null)
                         {
@@ -263,86 +247,73 @@ namespace KMZI
                         }
                     }
                 }
+                processBox.Text = processBox.Text.Replace(" ", ""); // Убираем пробелы
+                processBox.Text = processBox.Text.ToLower(); // Убираем прописные
 
-                processBox.Text = processBox.Text.Replace(" ", "");
-                processBox.Text = processBox.Text.ToLower();
-
-               // if (processBox.TextLength != 2)           /*додумать функцию по вставке биграмм*/
-               // {
-                    for (int i = 0; i < processBox.TextLength; i += 2)//вставляем х в биграммы
+                // Здесь в биграммы вставляется х
+                for (int i = 0; i < processBox.TextLength; i += 2)
+                {
+                    if (i + 1 < processBox.TextLength)
                     {
-                        if (i + 1 < processBox.TextLength)
+                        if (processBox.Text[i] == processBox.Text[i + 1])
                         {
-                            if (processBox.Text[i] == processBox.Text[i + 1])
+                            processBox.Text = processBox.Text.Insert(i + 1, symbol);
+
+                            // Запоминаем позиции только что вставленных символов
+                            if (position_of_x == null)
                             {
-                                processBox.Text = processBox.Text.Insert(i + 1, symbol);
-
-                                if (position_of_x == null)
-                                {
-                                    position_of_x = new int[1];
-                                    position_of_x[0] = i + 1;
-                                }
-                                else
-                                {
-                                    position_of_x_temp = new int[position_of_x.Length];
-                                    position_of_x_temp = position_of_x;
-                                    position_of_x = new int[position_of_x.Length + 1];
-                                    position_of_x_temp.CopyTo(position_of_x, 0);
-                                    position_of_x[position_of_x.Length - 1] = i + 1;
-                                }
+                                position_of_x = new int[1];
+                                position_of_x[0] = i + 1;
                             }
-                        }
-                        else
-                        {
-                            if (processBox.TextLength % 2 != 0)
+                            else
                             {
-                                processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol);
-
-
-                                if (position_of_x == null)
-                                {
-                                    position_of_x = new int[1];
-                                    position_of_x[0] = processBox.TextLength - 1;
-                                }
-                                else
-                                {
-                                    position_of_x_temp = new int[position_of_x.Length];
-                                    position_of_x_temp = position_of_x;
-                                    position_of_x = new int[position_of_x.Length + 1];
-                                    position_of_x_temp.CopyTo(position_of_x, 0);
-                                    position_of_x[position_of_x.Length - 1] = processBox.TextLength - 1;
-                                }
+                                position_of_x_temp = new int[position_of_x.Length];
+                                position_of_x_temp = position_of_x;
+                                position_of_x = new int[position_of_x.Length + 1];
+                                position_of_x_temp.CopyTo(position_of_x, 0);
+                                position_of_x[position_of_x.Length - 1] = i + 1;
                             }
-                            break;
                         }
                     }
-               // }
-                //else
-                //{
-                //    if(processBox.Text[0] == processBox.Text[1])
-                //    {
-                //        processBox.Text = processBox.Text.Insert(1, symbol);
-                //        processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol);
-                //        position_of_x = new int[2];
-                //        position_of_x[0] = 1;
-                //        position_of_x[1] = 3;
-                //    }
-                //}
-
-
-                for (int n = 0; n < processBox.TextLength; n += 2)//процесс шифрования
-                {
-                    for (int i = 0; i < alphabet_temp.GetLength(0); i++)
+                    else
                     {
-                        for (int j = 0; j < alphabet_temp.GetLength(1); j++)
+                        if (processBox.TextLength % 2 != 0)
                         {
-                            if (processBox.Text[n] == alphabet_temp[i, j])
+                            processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol);
+
+
+                            if (position_of_x == null)
+                            {
+                                position_of_x = new int[1];
+                                position_of_x[0] = processBox.TextLength - 1;
+                            }
+                            else
+                            {
+                                position_of_x_temp = new int[position_of_x.Length];
+                                position_of_x_temp = position_of_x;
+                                position_of_x = new int[position_of_x.Length + 1];
+                                position_of_x_temp.CopyTo(position_of_x, 0);
+                                position_of_x[position_of_x.Length - 1] = processBox.TextLength - 1;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                // Непосредственно реализация алгоритма шифрования
+                for (int n = 0; n < processBox.TextLength; n += 2)
+                {
+                    for (int i = 0; i < alphabet_new.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < alphabet_new.GetLength(1); j++)
+                        {
+                            if (processBox.Text[n] == alphabet_new[i, j])
                             {
                                 pos1[0] = i;
                                 pos1[1] = j;
                                 get1 = true;
                             }
-                            if (processBox.Text[n + 1] == alphabet_temp[i, j])
+                            if (processBox.Text[n + 1] == alphabet_new[i, j])
                             {
                                 pos2[0] = i;
                                 pos2[1] = j;
@@ -352,18 +323,18 @@ namespace KMZI
                             {
                                 if (pos1[0] == pos2[0] && pos1[1] != pos2[1])
                                 {
-                                    textBox2.Text += alphabet_temp[pos1[0], (pos1[1] + 1) % alphabet_temp.GetLength(1)];
-                                    textBox2.Text += alphabet_temp[pos2[0], (pos2[1] + 1) % alphabet_temp.GetLength(1)];
+                                    textBox2.Text += alphabet_new[pos1[0], (pos1[1] + 1) % alphabet_new.GetLength(1)];
+                                    textBox2.Text += alphabet_new[pos2[0], (pos2[1] + 1) % alphabet_new.GetLength(1)];
                                 }
                                 if (pos1[0] != pos2[0] && pos1[1] == pos2[1])
-                                {                                 
-                                    textBox2.Text += alphabet_temp[(pos1[0] + 1) % alphabet_temp.GetLength(0), pos1[1]];
-                                    textBox2.Text += alphabet_temp[(pos2[0] + 1) % alphabet_temp.GetLength(0), pos2[1]];
+                                {
+                                    textBox2.Text += alphabet_new[(pos1[0] + 1) % alphabet_new.GetLength(0), pos1[1]];
+                                    textBox2.Text += alphabet_new[(pos2[0] + 1) % alphabet_new.GetLength(0), pos2[1]];
                                 }
                                 if (pos1[0] != pos2[0] && pos1[1] != pos2[1])
                                 {
-                                    textBox2.Text += alphabet_temp[pos1[0], pos2[1]];
-                                    textBox2.Text += alphabet_temp[pos2[0], pos1[1]];
+                                    textBox2.Text += alphabet_new[pos1[0], pos2[1]];
+                                    textBox2.Text += alphabet_new[pos2[0], pos1[1]];
                                 }
                                 break;
                             }
@@ -377,24 +348,27 @@ namespace KMZI
                     }
                 }
             }
-/*Расшифрование-----------------------------------------------------------------------------------------------------------------------------------*/
+
+            // Расшифрование
             if (radioButton2.Checked == true)
             {
+                textBox1.Text = textBox1.Text.ToLower();
                 processBox.Text = textBox1.Text;
 
+                // Преобразуем текст обратно
                 for (int n = 0; n < processBox.TextLength; n += 2)
                 {
-                    for (int i = 0; i < alphabet_temp.GetLength(0); i++)
+                    for (int i = 0; i < alphabet_new.GetLength(0); i++)
                     {
-                        for (int j = 0; j < alphabet_temp.GetLength(1); j++)
+                        for (int j = 0; j < alphabet_new.GetLength(1); j++)
                         {
-                            if (processBox.Text[n] == alphabet_temp[i, j])
+                            if (processBox.Text[n] == alphabet_new[i, j])
                             {
                                 pos1[0] = i;
                                 pos1[1] = j;
                                 get1 = true;
                             }
-                            if (processBox.Text[n + 1] == alphabet_temp[i, j])
+                            if (processBox.Text[n + 1] == alphabet_new[i, j])
                             {
                                 pos2[0] = i;
                                 pos2[1] = j;
@@ -404,18 +378,18 @@ namespace KMZI
                             {
                                 if (pos1[0] == pos2[0] && pos1[1] != pos2[1])
                                 {
-                                    textBox2.Text += alphabet_temp[pos1[0], (pos1[1] - 1 + alphabet_temp.GetLength(1)) % alphabet_temp.GetLength(1)];
-                                    textBox2.Text += alphabet_temp[pos2[0], (pos2[1] - 1 + alphabet_temp.GetLength(1)) % alphabet_temp.GetLength(1)];
+                                    textBox2.Text += alphabet_new[pos1[0], (pos1[1] - 1 + alphabet_new.GetLength(1)) % alphabet_new.GetLength(1)];
+                                    textBox2.Text += alphabet_new[pos2[0], (pos2[1] - 1 + alphabet_new.GetLength(1)) % alphabet_new.GetLength(1)];
                                 }
                                 if (pos1[0] != pos2[0] && pos1[1] == pos2[1])
                                 {
-                                    textBox2.Text += alphabet_temp[(pos1[0] - 1 + alphabet_temp.GetLength(0)) % alphabet_temp.GetLength(0), pos1[1]];
-                                    textBox2.Text += alphabet_temp[(pos2[0] - 1 + alphabet_temp.GetLength(0)) % alphabet_temp.GetLength(0), pos2[1]];
+                                    textBox2.Text += alphabet_new[(pos1[0] - 1 + alphabet_new.GetLength(0)) % alphabet_new.GetLength(0), pos1[1]];
+                                    textBox2.Text += alphabet_new[(pos2[0] - 1 + alphabet_new.GetLength(0)) % alphabet_new.GetLength(0), pos2[1]];
                                 }
                                 if (pos1[0] != pos2[0] && pos1[1] != pos2[1])
                                 {
-                                    textBox2.Text += alphabet_temp[pos1[0], pos2[1]];
-                                    textBox2.Text += alphabet_temp[pos2[0], pos1[1]];
+                                    textBox2.Text += alphabet_new[pos1[0], pos2[1]];
+                                    textBox2.Text += alphabet_new[pos2[0], pos1[1]];
                                 }
                                 break;
                             }
@@ -429,6 +403,7 @@ namespace KMZI
                     }
                 }
 
+                // Возвращаем в биграммы расшифрованного текста ранее вырезанные символы
                 if (position_of_x != null)
                 {
                     for (int i = position_of_x.Length - 1; i >= 0; i--)
@@ -437,6 +412,7 @@ namespace KMZI
                     }
                 }
 
+                // Возвращаем пробелы
                 if (position_of_spaceButton != null)
                 {
                     for (int i = 0; i < position_of_spaceButton.Length; i++)
@@ -445,7 +421,7 @@ namespace KMZI
                     }
                 }
 
-               
+                // Возвращаем Прописные буквы
                 if (position_of_upper != null)
                 {
                     count = 0;
@@ -469,6 +445,7 @@ namespace KMZI
                     }
                 }
 
+                // Возвращаем символы, не содержащиеся в алфавите
                 if (non_alphabet != null)
                 {
                     for (int i = 0; i < non_alphabet_pos.Length; i++)
@@ -478,12 +455,12 @@ namespace KMZI
                 }
                 
             }
-
             listBox1.Items.Add(keyBox.Text);
             listBox2.Items.Add(textBox1.Text);
             listBox2.Items.Add(textBox2.Text);
         }
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        // Замена букв, которые не вошли в алфавит, на аналоги
         public string replace_missing_letters(string str)
         {
             if(Eng == true)
@@ -500,6 +477,7 @@ namespace KMZI
             return str;
         }
 
+        // Кнопка "Очистить поля"
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -509,17 +487,20 @@ namespace KMZI
             button2.Enabled = false;
         }
 
+        // Кнопка "Очистить историю"
         private void button3_Click(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
             listBox2.Items.Clear();
         }
 
+        // Кнопка "Закрыть"
         private void button4_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Изменилось состояние радиальной кнопки "Шифрование"
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             button2.Text = "Зашифровать";
@@ -529,6 +510,7 @@ namespace KMZI
             processBox.Clear();
         }
 
+        // Изменилось состояние радиальной кнопки "Расшифрование"
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             button2.Text = "Расшифровать";
@@ -538,26 +520,24 @@ namespace KMZI
             processBox.Clear();
         }
 
+        // Если меняется содержимое TextBox1
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            //label4.Text = ": " + textBox1.TextLength;
-
             if (textBox1.TextLength > 0)
-            {
-                
+            {       
                 keyBox.Enabled = true;
 
-
+                // Если первый символ - не буква, то полный сброс и вообще уходи!
                 if (!char.IsLetter(textBox1.Text[0]))
                 {
                     textBox1.Clear();
                     keyBox.Enabled = false;
                     Eng = false;
                     Rus = false;
-                    //label4.Text = ": " + textBox1.TextLength;
                     return;
                 }
 
+                // Далее, определяем язык входного сообщения для использования соответствующего алфавита
                 for (int i = 0; i < 26; i++)
                 {
                     if (textBox1.Text[0] == eng[i] || textBox1.Text[0] == ENG[i])
@@ -638,9 +618,9 @@ namespace KMZI
                 Eng = false;
                 Rus = false;
             }
-            //label4.Text = ": " + textBox1.TextLength;
         }
 
+        // Если изменилось содержимое поля ввода ключа
         private void keyBox_TextChanged(object sender, EventArgs e)
         {
             if (keyBox.TextLength > 0)
@@ -685,25 +665,27 @@ namespace KMZI
             }
         }
 
-        public string alphabet_processing(string alph) // функция-обработчик алфавита
+        // Создание нового алфавита на основе ключа
+        public string alphabet_processing(string alph) 
         {
             string tempo = null;
-
-            alph.ToLower();
+            alph.ToLower(); // Ключ в нижний регистр
             tempo = alph[0].ToString();
 
+            // Здесь введеный ключ избавляется от повторяющихся букв
             if (alph.Length > 1)
             {
                 for (int i = 0; i < alph.Length; i++)
                 {
                     if (!tempo.Contains(alph[i]))
                     {
-                        tempo += alph[i];       //вносим ключ в начало нового алфавита (без повторов!)
-                    }                           //Позже по порядку вписываем оставшиеся буквы из алфавита, если они еще не присутствуют в новом алфавите
+                        tempo += alph[i];       
+                    }                           
                 }
                 alph = tempo;
             }
 
+            // В зависимости от зяыка дополним новый алфавит недостающими символами
             if (Eng == true)
             {
                 for (int i = 0; i < 5; i++)
@@ -733,12 +715,14 @@ namespace KMZI
             return alph;
         }
 
+        // Если выбран элемент из Истории сообщений
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox1.Clear();
             textBox1.Text += listBox2.SelectedItem;
         }
 
+        // Если выбран элемент из Истории ключей
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             keyBox.Clear();
