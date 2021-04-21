@@ -42,12 +42,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.binaryBox = new System.Windows.Forms.RichTextBox();
             this.groupVernam.SuspendLayout();
             this.SuspendLayout();
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(409, 520);
+            this.button4.Location = new System.Drawing.Point(409, 598);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(135, 26);
             this.button4.TabIndex = 38;
@@ -57,6 +58,7 @@
             // 
             // groupVernam
             // 
+            this.groupVernam.Controls.Add(this.binaryBox);
             this.groupVernam.Controls.Add(this.keyBoxProcessed);
             this.groupVernam.Controls.Add(this.listBox1);
             this.groupVernam.Controls.Add(this.keyBox);
@@ -71,7 +73,7 @@
             this.groupVernam.Controls.Add(this.button2);
             this.groupVernam.Location = new System.Drawing.Point(12, 12);
             this.groupVernam.Name = "groupVernam";
-            this.groupVernam.Size = new System.Drawing.Size(539, 475);
+            this.groupVernam.Size = new System.Drawing.Size(539, 555);
             this.groupVernam.TabIndex = 35;
             this.groupVernam.TabStop = false;
             // 
@@ -87,7 +89,7 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(272, 270);
+            this.listBox1.Location = new System.Drawing.Point(272, 364);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(260, 147);
             this.listBox1.TabIndex = 13;
@@ -113,7 +115,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(6, 174);
+            this.textBox2.Location = new System.Drawing.Point(6, 268);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(526, 65);
@@ -131,7 +133,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(6, 423);
+            this.button3.Location = new System.Drawing.Point(6, 517);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(526, 26);
             this.button3.TabIndex = 7;
@@ -142,7 +144,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 254);
+            this.label2.Location = new System.Drawing.Point(3, 348);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 5;
@@ -170,7 +172,7 @@
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(6, 270);
+            this.listBox2.Location = new System.Drawing.Point(6, 364);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(260, 147);
             this.listBox2.TabIndex = 6;
@@ -186,11 +188,20 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // binaryBox
+            // 
+            this.binaryBox.Location = new System.Drawing.Point(6, 164);
+            this.binaryBox.Name = "binaryBox";
+            this.binaryBox.ReadOnly = true;
+            this.binaryBox.Size = new System.Drawing.Size(526, 98);
+            this.binaryBox.TabIndex = 16;
+            this.binaryBox.Text = "";
+            // 
             // Vernam
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(563, 558);
+            this.ClientSize = new System.Drawing.Size(563, 636);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupVernam);
             this.Name = "Vernam";
@@ -217,5 +228,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.RichTextBox binaryBox;
     }
 }

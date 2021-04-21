@@ -97,6 +97,7 @@ namespace KMZI
             non_alphabet_temp = null;
             alphabet_new = null;
             string symbol = null;
+            string symbol2 = null;
             temp = null;
             pos1 = new int[2];
             pos2 = new int[2];
@@ -112,11 +113,13 @@ namespace KMZI
             {
                 alphabet_current = m_eng;
                 symbol = "x"; //английская х
+                symbol2 = "y";
             }
             else
             {
                 alphabet_current = m_rus;
                 symbol = "х"; // русская х
+                symbol2 = "у";
             }
 
             // Вносим алфавит во временную строку
@@ -130,7 +133,7 @@ namespace KMZI
 
             temp = alphabet_processing(keyBox.Text.ToLower()); // Преобразование алфавита в стиле альберти
 
-            // Результат преобразования перене
+            // Результат преобразования перенесён в новый алфавит
             alphabet_new = new char[alphabet_current.GetLength(0), alphabet_current.GetLength(1)];
             for (int i = 0; i < alphabet_current.GetLength(0); i++)
             {
@@ -170,7 +173,7 @@ namespace KMZI
                             break;
                         }
                     }
-                    if (contains == false) // Ессли символ не нашёлся в алфавите
+                    if (contains == false) // Если символ не нашёлся в алфавите
                     {
                         /*Делаем два массива:
                          В одном запоминаем ненайденный символ
@@ -209,7 +212,7 @@ namespace KMZI
                     }
                 }
 
-                // По аналлогии с функцией выше, запоммним позиции пробелов в тексте и заменим их на ""
+                // По аналогии с функцией выше, запоммним позиции пробелов в тексте и заменим их на ""
                 for (int i = 0; i < processBox.TextLength; i++)
                 {
                     if (processBox.Text[i] == ' ')
@@ -257,7 +260,14 @@ namespace KMZI
                     {
                         if (processBox.Text[i] == processBox.Text[i + 1])
                         {
-                            processBox.Text = processBox.Text.Insert(i + 1, symbol);
+                            if (processBox.Text[i].ToString() == symbol)
+                            {
+                                processBox.Text = processBox.Text.Insert(i + 1, symbol2);
+                            }
+                            else
+                            {
+                                processBox.Text = processBox.Text.Insert(i + 1, symbol);
+                            }
 
                             // Запоминаем позиции только что вставленных символов
                             if (position_of_x == null)
@@ -279,8 +289,14 @@ namespace KMZI
                     {
                         if (processBox.TextLength % 2 != 0)
                         {
-                            processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol);
-
+                            if (processBox.Text[i].ToString() == symbol)
+                            {
+                                processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol2);
+                            }
+                            else
+                            {
+                                processBox.Text = processBox.Text.Insert(processBox.TextLength, symbol);
+                            }
 
                             if (position_of_x == null)
                             {
@@ -336,6 +352,11 @@ namespace KMZI
                                     textBox2.Text += alphabet_new[pos1[0], pos2[1]];
                                     textBox2.Text += alphabet_new[pos2[0], pos1[1]];
                                 }
+                                if (pos1[0] == pos2[0] && pos1[1] == pos2[1])
+                                {
+                                    textBox2.Text += alphabet_new[pos1[0], (pos1[1] + 1) % alphabet_new.GetLength(1)];
+                                    textBox2.Text += alphabet_new[pos2[0], (pos2[1] + 1) % alphabet_new.GetLength(1)];
+                                }
                                 break;
                             }
                         }
@@ -390,7 +411,7 @@ namespace KMZI
                                 {
                                     textBox2.Text += alphabet_new[pos1[0], pos2[1]];
                                     textBox2.Text += alphabet_new[pos2[0], pos1[1]];
-                                }
+                                }                 
                                 break;
                             }
                         }

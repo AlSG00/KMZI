@@ -39,6 +39,7 @@ namespace KMZI
         {
             textBox2.Clear();
             keyBoxProcessed.Clear();
+            binaryBox.Clear();
 
             count = 0;
             text_temp = null;
@@ -103,7 +104,10 @@ namespace KMZI
 
             // Шифрование текста
             answer_binary = convert_xor(text_binary, key_binary);
-
+            for(int i = 0; i < answer_binary.Length; i++)
+            {
+                binaryBox.Text += answer_binary[i];
+            }
             // Преобразование двоичного результата шифрования в десятичные числа
             answer_byte = convert_to_decimal(answer_binary);
 
@@ -256,6 +260,7 @@ namespace KMZI
             textBox1.Clear();
             keyBox.Clear();
             keyBoxProcessed.Clear();
+            binaryBox.Clear();
         }
     }
 }

@@ -37,7 +37,8 @@ namespace KMZI
         // Кнопка "Зашифровать / Расшифровать"
         private void button2_Click(object sender, EventArgs e)
         {
-            textBox2.Clear();
+            
+              textBox2.Clear();
             count = 0;
             int count_transitions = 0;
             char[,] answer = new char[matrix_side, matrix_side];
