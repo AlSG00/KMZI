@@ -24,11 +24,14 @@ namespace KMZI
                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                             '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
+        int mod = 6655;
+
         // Кнопка "Преобразовать"
         private void button2_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
             keyBox.Clear();
+            progressBar1.Value = 0;
 
             //Если ключ не отвечает условиям, то будет ошибка
             if(!isStartKeyCorrect(startKeyBox.Text))
@@ -37,7 +40,7 @@ namespace KMZI
                 startKeyBox.Clear();
                 return;
             }
-
+            startKeyBox.Text = Convert.ToString(Convert.ToInt32(startKeyBox.Text) % 6655);
             char[] symbol = new char[textBox1.TextLength];
             int[] symbol_pos = new int[textBox1.TextLength];
             int[] text = new int[textBox1.TextLength];
@@ -61,28 +64,30 @@ namespace KMZI
             ushort[] text_byte = convert_to_byte(text);
 
             // Конвертирум байтовую последовательность в двоичную
-            string[] text_binary = convert_to_binary(text_byte, 8);
+            string[] text_binary = convert_to_binary(text_byte, 16);
 
             // Генерируем случайную числовую последовательность
             int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()));
 
-            for(int i = 0; i < key.Length; i++)
-            { 
-                keyBox.Text += key[i] + " ";
-            }
+            //for(int i = 0; i < key.Length; i++)
+            //{ 
+            //    keyBox.Text += key[i] + " ";
+            //}
 
             // Конвертируем последовательность в байтовую
             ushort[] key_byte = convert_to_byte(key);
 
             // Конвертирум байтовую последовательность в двоичную
-            string[] key_binary = convert_to_binary(key_byte, 8);
+            string[] key_binary = convert_to_binary(key_byte, 16);
 
             // Шифруем исключающим ИЛИ
             string[] result_binary = convert_xor(text_binary, key_binary);
 
             // Конвертируем двочную последовательность в десятичную
-            ushort[] result_byte = convert_to_decimal(result_binary, 8);
+            ushort[] result_byte = convert_to_decimal(result_binary, 16);
 
+            progressBar1.Maximum = result_byte.Length;
+            progressBar1.Step = 1;
             for (int i = 0; i < result_byte.Length; i++)
             {
                 if (symbol_pos[i] == 0)
@@ -93,6 +98,7 @@ namespace KMZI
                 {
                     textBox2.Text += symbol[i];
                 }
+                progressBar1.PerformStep();
             }
         }
 
@@ -145,17 +151,16 @@ namespace KMZI
 
         // Функция генерации ключа линейным конгруэнтным методом
        int[] generate_key(int startIndex)
-        {
-            int m = 678;
-            int a = 1;
-            int c = 2;
+        {            
+            int a = 936;
+            int c = 1399;
             int x = startIndex;
             int[] key = new int[textBox1.TextLength];
             key[0] = x;
 
             for(int i = 1; i < textBox1.TextLength; i++)
             {
-                key[i] = (a * key[i - 1] + c) % m;
+                key[i] = (a * key[i - 1] + c) % mod;
             }
 
             return key;
@@ -173,7 +178,7 @@ namespace KMZI
                 }
             }
             // если числовая строка меньше нуля
-            if (Convert.ToInt32(key) < 0) 
+            if (Convert.ToInt32(key) % mod < 0) 
             {
                 return false;
             }
@@ -206,7 +211,7 @@ namespace KMZI
             return array_of_bytes;
         }
 
-        // Конвертирование десятичноых чисел в байтовый формат
+        // Конвертирование десятичных чисел в байтовый формат
         ushort[] convert_to_byte(int[] key)
         {
             ushort[] key_byte = new ushort[key.Length];
@@ -264,10 +269,10 @@ namespace KMZI
                 {
                     if (text_temp[j] == '1')
                     {
-                        answer_byte += Convert.ToByte(Math.Pow(2, bytes - 1 - j));
+                        answer_byte += Convert.ToUInt16(Math.Pow(2, bytes - 1 - j));
                     }
                 }
-                answer[i] = Convert.ToByte(answer_byte % alphabet.Length);
+                answer[i] = Convert.ToUInt16(answer_byte % alphabet.Length);
                 answer_byte = 0;
             }
 
