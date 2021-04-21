@@ -16,6 +16,9 @@ namespace KMZI
         public Gamma()
         {
             InitializeComponent();
+
+            button2.Enabled = false;
+            startKeyBox.Enabled = false;
         }
 
         char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
@@ -69,8 +72,8 @@ namespace KMZI
 
             // Генерируем случайную числовую последовательность
             int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()));
-            StreamWriter sw = new StreamWriter(filePath);
-            
+
+            StreamWriter sw = new StreamWriter(filePath);       
             for (int i = 0; i < key.Length; i++)
             { 
                 sw.Write(key[i] + " ");
@@ -91,9 +94,8 @@ namespace KMZI
 
             // Конвертируем двочную последовательность в десятичную
             ushort[] result_byte = convert_to_decimal(result_binary, 16);
-
-            char[] result_final = new char[result_byte.Length];
-            /*StreamWriter*/ sw = new StreamWriter(filePath);
+          
+            sw = new StreamWriter(filePath);
             progressBar1.Maximum = result_byte.Length;
             progressBar1.Step = 1;
             for (int i = 0; i < result_byte.Length; i++)
@@ -112,7 +114,6 @@ namespace KMZI
             str = new StreamReader(filePath);
             textBox2.Text += str.ReadToEnd();
             str.Close();
-
         }
 
         // Кнопка "Открыть файл"
@@ -155,6 +156,7 @@ namespace KMZI
             keyBox.Clear();
             startKeyBox.Clear();
             progressBar1.Value = 0;
+            button2.Enabled = false;
         }
 
         // Кнопка "Закрыть"
@@ -296,7 +298,27 @@ namespace KMZI
         // Выполняется, если изменилось содержимое startKeyBox
         private void startKeyBox_TextChanged(object sender, EventArgs e)
         {
+            if(startKeyBox.TextLength > 0 && startKeyBox.TextLength < 5 /*&& textBox1.TextLength > 0*/)
+            {
+                button2.Enabled = true;
+            }
+            else
+            {
+                button2.Enabled = false;
+            }
+        }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox1.TextLength > 0)
+            {
+                startKeyBox.Enabled = true;
+            }
+            else
+            {
+                startKeyBox.Clear();
+                startKeyBox.Enabled = false;
+            }
         }
     }
 }

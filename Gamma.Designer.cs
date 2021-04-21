@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.button4 = new System.Windows.Forms.Button();
-            this.groupVernam = new System.Windows.Forms.GroupBox();
+            this.groupGamma = new System.Windows.Forms.GroupBox();
             this.startKeyBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -43,7 +43,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.keyBox = new System.Windows.Forms.RichTextBox();
-            this.groupVernam.SuspendLayout();
+            this.groupGamma.SuspendLayout();
             this.SuspendLayout();
             // 
             // button4
@@ -56,24 +56,24 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // groupVernam
+            // groupGamma
             // 
-            this.groupVernam.Controls.Add(this.keyBox);
-            this.groupVernam.Controls.Add(this.progressBar1);
-            this.groupVernam.Controls.Add(this.startKeyBox);
-            this.groupVernam.Controls.Add(this.label2);
-            this.groupVernam.Controls.Add(this.button5);
-            this.groupVernam.Controls.Add(this.button3);
-            this.groupVernam.Controls.Add(this.textBox2);
-            this.groupVernam.Controls.Add(this.textBox1);
-            this.groupVernam.Controls.Add(this.button1);
-            this.groupVernam.Controls.Add(this.label1);
-            this.groupVernam.Controls.Add(this.button2);
-            this.groupVernam.Location = new System.Drawing.Point(12, 12);
-            this.groupVernam.Name = "groupVernam";
-            this.groupVernam.Size = new System.Drawing.Size(539, 539);
-            this.groupVernam.TabIndex = 39;
-            this.groupVernam.TabStop = false;
+            this.groupGamma.Controls.Add(this.keyBox);
+            this.groupGamma.Controls.Add(this.progressBar1);
+            this.groupGamma.Controls.Add(this.startKeyBox);
+            this.groupGamma.Controls.Add(this.label2);
+            this.groupGamma.Controls.Add(this.button5);
+            this.groupGamma.Controls.Add(this.button3);
+            this.groupGamma.Controls.Add(this.textBox2);
+            this.groupGamma.Controls.Add(this.textBox1);
+            this.groupGamma.Controls.Add(this.button1);
+            this.groupGamma.Controls.Add(this.label1);
+            this.groupGamma.Controls.Add(this.button2);
+            this.groupGamma.Location = new System.Drawing.Point(12, 12);
+            this.groupGamma.Name = "groupGamma";
+            this.groupGamma.Size = new System.Drawing.Size(539, 539);
+            this.groupGamma.TabIndex = 39;
+            this.groupGamma.TabStop = false;
             // 
             // startKeyBox
             // 
@@ -128,6 +128,7 @@
             this.textBox1.Size = new System.Drawing.Size(525, 164);
             this.textBox1.TabIndex = 8;
             this.textBox1.Text = "";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
             // 
@@ -178,6 +179,7 @@
             // 
             this.keyBox.Location = new System.Drawing.Point(58, 213);
             this.keyBox.Name = "keyBox";
+            this.keyBox.ReadOnly = true;
             this.keyBox.Size = new System.Drawing.Size(474, 87);
             this.keyBox.TabIndex = 42;
             this.keyBox.Text = "";
@@ -188,11 +190,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(562, 614);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.groupVernam);
+            this.Controls.Add(this.groupGamma);
             this.Name = "Gamma";
             this.Text = "Гаммирование";
-            this.groupVernam.ResumeLayout(false);
-            this.groupVernam.PerformLayout();
+            this.groupGamma.ResumeLayout(false);
+            this.groupGamma.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -200,7 +202,7 @@
         #endregion
 
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.GroupBox groupVernam;
+        private System.Windows.Forms.GroupBox groupGamma;
         private System.Windows.Forms.RichTextBox textBox2;
         private System.Windows.Forms.RichTextBox textBox1;
         private System.Windows.Forms.Button button1;
