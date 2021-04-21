@@ -362,7 +362,7 @@
             this.MaximumSize = new System.Drawing.Size(268, 598);
             this.MinimumSize = new System.Drawing.Size(268, 598);
             this.Name = "Start";
-            this.Text = "Атбаш";
+            this.Text = "КМЗИ";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupStartButtons.ResumeLayout(false);

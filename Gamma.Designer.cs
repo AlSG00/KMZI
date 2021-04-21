@@ -32,7 +32,6 @@
             this.groupVernam = new System.Windows.Forms.GroupBox();
             this.startKeyBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.keyBox = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.RichTextBox();
@@ -43,12 +42,13 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.keyBox = new System.Windows.Forms.RichTextBox();
             this.groupVernam.SuspendLayout();
             this.SuspendLayout();
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(409, 522);
+            this.button4.Location = new System.Drawing.Point(409, 576);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(135, 26);
             this.button4.TabIndex = 40;
@@ -58,9 +58,10 @@
             // 
             // groupVernam
             // 
+            this.groupVernam.Controls.Add(this.keyBox);
+            this.groupVernam.Controls.Add(this.progressBar1);
             this.groupVernam.Controls.Add(this.startKeyBox);
             this.groupVernam.Controls.Add(this.label2);
-            this.groupVernam.Controls.Add(this.keyBox);
             this.groupVernam.Controls.Add(this.button5);
             this.groupVernam.Controls.Add(this.button3);
             this.groupVernam.Controls.Add(this.textBox2);
@@ -70,7 +71,7 @@
             this.groupVernam.Controls.Add(this.button2);
             this.groupVernam.Location = new System.Drawing.Point(12, 12);
             this.groupVernam.Name = "groupVernam";
-            this.groupVernam.Size = new System.Drawing.Size(539, 471);
+            this.groupVernam.Size = new System.Drawing.Size(539, 539);
             this.groupVernam.TabIndex = 39;
             this.groupVernam.TabStop = false;
             // 
@@ -90,14 +91,6 @@
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 13;
             this.label2.Text = "Ключ";
-            // 
-            // keyBox
-            // 
-            this.keyBox.Location = new System.Drawing.Point(58, 235);
-            this.keyBox.Name = "keyBox";
-            this.keyBox.ReadOnly = true;
-            this.keyBox.Size = new System.Drawing.Size(474, 20);
-            this.keyBox.TabIndex = 12;
             // 
             // button5
             // 
@@ -121,7 +114,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(6, 293);
+            this.textBox2.Location = new System.Drawing.Point(6, 338);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(526, 172);
@@ -138,7 +131,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(272, 261);
+            this.button1.Location = new System.Drawing.Point(272, 306);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(260, 26);
             this.button1.TabIndex = 6;
@@ -157,7 +150,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(7, 261);
+            this.button2.Location = new System.Drawing.Point(6, 306);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(260, 26);
             this.button2.TabIndex = 6;
@@ -176,17 +169,24 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(18, 489);
+            this.progressBar1.Location = new System.Drawing.Point(6, 516);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(526, 17);
             this.progressBar1.TabIndex = 41;
+            // 
+            // keyBox
+            // 
+            this.keyBox.Location = new System.Drawing.Point(58, 213);
+            this.keyBox.Name = "keyBox";
+            this.keyBox.Size = new System.Drawing.Size(474, 87);
+            this.keyBox.TabIndex = 42;
+            this.keyBox.Text = "";
             // 
             // Gamma
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(562, 560);
-            this.Controls.Add(this.progressBar1);
+            this.ClientSize = new System.Drawing.Size(562, 614);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupVernam);
             this.Name = "Gamma";
@@ -208,11 +208,11 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox startKeyBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox keyBox;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.RichTextBox keyBox;
     }
 }

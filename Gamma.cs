@@ -25,6 +25,7 @@ namespace KMZI
                             '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
         int mod = 6655;
+        string filePath = @"D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\out.txt";
 
         // Кнопка "Преобразовать"
         private void button2_Click(object sender, EventArgs e)
@@ -68,11 +69,16 @@ namespace KMZI
 
             // Генерируем случайную числовую последовательность
             int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()));
-
-            //for(int i = 0; i < key.Length; i++)
-            //{ 
-            //    keyBox.Text += key[i] + " ";
-            //}
+            StreamWriter sw = new StreamWriter(filePath);
+            
+            for (int i = 0; i < key.Length; i++)
+            { 
+                sw.Write(key[i] + " ");
+            }
+            sw.Close();
+            StreamReader str = new StreamReader(filePath);
+            keyBox.Text += str.ReadToEnd();
+            str.Close();
 
             // Конвертируем последовательность в байтовую
             ushort[] key_byte = convert_to_byte(key);
@@ -86,20 +92,27 @@ namespace KMZI
             // Конвертируем двочную последовательность в десятичную
             ushort[] result_byte = convert_to_decimal(result_binary, 16);
 
+            char[] result_final = new char[result_byte.Length];
+            /*StreamWriter*/ sw = new StreamWriter(filePath);
             progressBar1.Maximum = result_byte.Length;
             progressBar1.Step = 1;
             for (int i = 0; i < result_byte.Length; i++)
             {
                 if (symbol_pos[i] == 0)
                 {
-                    textBox2.Text += alphabet[result_byte[i]];
+                    sw.Write(alphabet[result_byte[i]]);
                 }
                 else
                 {
-                    textBox2.Text += symbol[i];
+                    sw.Write(symbol[i]);
                 }
                 progressBar1.PerformStep();
             }
+            sw.Close();
+            str = new StreamReader(filePath);
+            textBox2.Text += str.ReadToEnd();
+            str.Close();
+
         }
 
         // Кнопка "Открыть файл"
@@ -112,14 +125,14 @@ namespace KMZI
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             //textBox1.Text = System.IO.File.ReadAllText(openFileDialog1.FileName);
-            StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
+            //StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
             textBox1.Clear();
-            textBox1.Text += str.ReadToEnd();
-            //byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
-            //for(int i = 0; i < byteArray.Length; i++)
-            //{
-            //    textBox1.Text += byteArray[i];
-            //}
+            //textBox1.Text += str.ReadToEnd();
+            byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
+            for(int i = 0; i < byteArray.Length; i++)
+            {
+                textBox1.Text += byteArray[i];
+            }
         }
 
         // Кнопка "Сохранить файл"
@@ -141,6 +154,7 @@ namespace KMZI
             textBox2.Clear();
             keyBox.Clear();
             startKeyBox.Clear();
+            progressBar1.Value = 0;
         }
 
         // Кнопка "Закрыть"
