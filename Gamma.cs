@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,7 +28,7 @@ namespace KMZI
                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                             '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
-        int mod = 6655;
+        int mod = 6655; // Модуль (mod >= 2)
         string filePath = @"D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\out.txt";
 
         // Кнопка "Преобразовать"
@@ -49,6 +50,8 @@ namespace KMZI
             int[] symbol_pos = new int[textBox1.TextLength];
             int[] text = new int[textBox1.TextLength];
 
+            progressBar1.Maximum = textBox1.TextLength;
+            progressBar1.Step = 1;
             // Преобразуем строку в числа
             for (int i = 0; i < textBox1.TextLength; i++)
             {
@@ -62,6 +65,7 @@ namespace KMZI
                     symbol[i] = textBox1.Text[i];
                     symbol_pos[i] = 1;
                 }
+                progressBar1.PerformStep();
             }
 
             // Конвертируем последовательность в байтовую
@@ -73,6 +77,7 @@ namespace KMZI
             // Генерируем случайную числовую последовательность
             int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()));
 
+            // Вывод ключа через файл
             StreamWriter sw = new StreamWriter(filePath);       
             for (int i = 0; i < key.Length; i++)
             { 
@@ -95,9 +100,10 @@ namespace KMZI
             // Конвертируем двочную последовательность в десятичную
             ushort[] result_byte = convert_to_decimal(result_binary, 16);
           
+            // Вывод результата через файл
             sw = new StreamWriter(filePath);
-            progressBar1.Maximum = result_byte.Length;
-            progressBar1.Step = 1;
+            //progressBar1.Maximum = result_byte.Length;
+            //progressBar1.Step = 1;
             for (int i = 0; i < result_byte.Length; i++)
             {
                 if (symbol_pos[i] == 0)
@@ -108,7 +114,7 @@ namespace KMZI
                 {
                     sw.Write(symbol[i]);
                 }
-                progressBar1.PerformStep();
+                //progressBar1.PerformStep();
             }
             sw.Close();
             str = new StreamReader(filePath);
@@ -126,14 +132,30 @@ namespace KMZI
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             //textBox1.Text = System.IO.File.ReadAllText(openFileDialog1.FileName);
-            //StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
+
+            StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
             textBox1.Clear();
-            //textBox1.Text += str.ReadToEnd();
-            byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
-            for(int i = 0; i < byteArray.Length; i++)
-            {
-                textBox1.Text += byteArray[i];
-            }
+            textBox1.Text += str.ReadToEnd();
+            str.Close();
+
+            //FileStream fstream = File.OpenRead(openFileDialog1.FileName);
+            //byte[] govno = null;
+            //fstream.Read(govno, 0, Convert.ToInt32(fstream.Length));
+            //for(int i = 0; i < govno.Length; i++)
+            //{
+            //    textBox1.Text += govno[i];
+            //}
+
+            //textBox1.Text += File.OpenRead(openFileDialog1.FileName);
+            /*textBox1.Text += fstream.Read()*/
+            //keyBox.Clear();
+            //Process.Start(openFileDialog1.FileName); // лол
+
+            //byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
+            //for(int i = 0; i < byteArray.Length; i++)
+            //{
+            //    textBox1.Text += byteArray[i];
+            //}
         }
 
         // Кнопка "Сохранить файл"
@@ -145,7 +167,13 @@ namespace KMZI
         // Сохранение в файл
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            System.IO.File.WriteAllText(saveFileDialog1.FileName, textBox2.Text);
+            //System.IO.File.WriteAllText(saveFileDialog1.FileName, textBox2.Text);
+            StreamWriter sw = new StreamWriter(saveFileDialog1.FileName);
+            for(int i = 0; i < textBox2.TextLength; i++)
+            {
+                sw.Write(textBox2.Text[i]);
+            }
+            sw.Close();
         }
 
         // Кнопка "Очистить поля"
@@ -168,9 +196,9 @@ namespace KMZI
         // Функция генерации ключа линейным конгруэнтным методом
        int[] generate_key(int startIndex)
         {            
-            int a = 936;
-            int c = 1399;
-            int x = startIndex;
+            int a = 936; // Множитель (0 <= a < mod)
+            int c = 1399; // Приращение (0 <= c < mod)
+            int x = startIndex; // Начальное значение (0 <= x < mod)
             int[] key = new int[textBox1.TextLength];
             key[0] = x;
 
@@ -277,6 +305,9 @@ namespace KMZI
             int answer_byte = 0;
             string text_temp = null;
 
+            //progressBar1.Maximum = array.Length;
+            //progressBar1.Step = 1;
+
             for (int i = 0; i < array.Length; i++)
             {
                 text_temp = array[i];
@@ -290,6 +321,8 @@ namespace KMZI
                 }
                 answer[i] = Convert.ToUInt16(answer_byte % alphabet.Length);
                 answer_byte = 0;
+                //progressBar1.PerformStep();
+
             }
 
             return answer;
@@ -298,7 +331,7 @@ namespace KMZI
         // Выполняется, если изменилось содержимое startKeyBox
         private void startKeyBox_TextChanged(object sender, EventArgs e)
         {
-            if(startKeyBox.TextLength > 0 && startKeyBox.TextLength < 5 /*&& textBox1.TextLength > 0*/)
+            if(startKeyBox.TextLength > 0 && startKeyBox.TextLength < 9 /*&& textBox1.TextLength > 0*/)
             {
                 button2.Enabled = true;
             }
@@ -308,6 +341,7 @@ namespace KMZI
             }
         }
 
+        // Выполняется, если изменилось содержимое поля ввода
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if(textBox1.TextLength > 0)
