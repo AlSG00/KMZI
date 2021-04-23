@@ -24,3 +24,5 @@ D:\Documents & projects\Учёба\4 курс\10 семестр\Криптогр
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Debug\KMZI.Hill.resources
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Debug\KMZI.PoliCypher.resources
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Debug\KMZI.Vernam.resources
+D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Debug\KMZI.DES.resources
+D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Debug\KMZI.GOST.resources

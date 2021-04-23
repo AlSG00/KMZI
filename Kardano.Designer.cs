@@ -290,6 +290,7 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupKardano);
             this.Name = "Kardano";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Кардано";
             this.groupKardano.ResumeLayout(false);
             this.groupKardano.PerformLayout();

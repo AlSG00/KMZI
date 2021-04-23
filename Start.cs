@@ -32,23 +32,13 @@ namespace KMZI
             button14.Enabled = true;    //Криптосистема Хилла
             button15.Enabled = true;    //Вернам
             button16.Enabled = true;    //Частотный криптоанализ
-            button17.Enabled = false;   //Криптоанализ полиалфавитных шифров
+            button17.Enabled = true;    //Криптоанализ полиалфавитных шифров
             button18.Enabled = true;    //Гаммирование
-            button19.Enabled = false;   //***
-            button1.Enabled = false;    //***
+            button19.Enabled = false;   //DES
+            button1.Enabled = false;    //ГОСТ
 
             groupStartButtons.Visible = true;
             groupStartButtons.Enabled = true;
-        }
-
-        private void атбашToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            button3_Click_1(sender, e);
-        }
-
-        private void сциталаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            button5_Click(sender, e);
         }
 
         private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
@@ -81,25 +71,10 @@ namespace KMZI
             formCaezar.Show();
         }
 
-        private void цезарьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            button7_Click(sender, e);
-        }
-
-        private void квадратПолибияToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            button6_Click(sender, e);
-        }
-
         private void помощьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormHelp help = new FormHelp();
             help.Show();
-        }
-
-        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -168,14 +143,107 @@ namespace KMZI
             formGamma.Show();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button19_Click(object sender, EventArgs e)
         {
+            DES formDES = new DES();
+            formDES.Show();
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GOST formGOST = new GOST();
+            formGOST.Show();
+        }
+
+        private void атбашToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            button3_Click_1(sender, e);
+        }
+
+        private void сциталаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            button5_Click(sender, e);
+        }
+
+        private void квадратПолибияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            button6_Click(sender, e);
+        }
+
+
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            button7_Click(sender, e);
+        }
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            button8_Click(sender, e);
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            button9_Click(sender, e);
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            button10_Click(sender, e);
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            button11_Click(sender, e);
+        }
+
+        private void toolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            button12_Click(sender, e);
+        }
+
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            button13_Click(sender, e);
+        }
+
+        private void toolStripMenuItem8_Click(object sender, EventArgs e)
+        {
+            button14_Click(sender, e);
+        }
+
+        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        {
+            button15_Click(sender, e);
+        }
+
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        {
+            button16_Click(sender, e);
+        }
+
+        private void toolStripMenuItem11_Click(object sender, EventArgs e)
+        {
+            button17_Click(sender, e);
+        }
+
+        private void toolStripMenuItem12_Click(object sender, EventArgs e)
+        {
+            button18_Click(sender, e);
+        }
+
+        private void toolStripMenuItem13_Click(object sender, EventArgs e)
+        {
+            button19_Click(sender, e);
+        }
+
+        private void toolStripMenuItem14_Click(object sender, EventArgs e)
+        {
+            button1_Click(sender, e);
+        }
+
+        private void exit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

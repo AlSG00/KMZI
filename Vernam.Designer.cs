@@ -30,6 +30,7 @@
         {
             this.button4 = new System.Windows.Forms.Button();
             this.groupVernam = new System.Windows.Forms.GroupBox();
+            this.binaryBox = new System.Windows.Forms.RichTextBox();
             this.keyBoxProcessed = new System.Windows.Forms.RichTextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.keyBox = new System.Windows.Forms.RichTextBox();
@@ -42,7 +43,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.binaryBox = new System.Windows.Forms.RichTextBox();
             this.groupVernam.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +76,15 @@
             this.groupVernam.Size = new System.Drawing.Size(539, 555);
             this.groupVernam.TabIndex = 35;
             this.groupVernam.TabStop = false;
+            // 
+            // binaryBox
+            // 
+            this.binaryBox.Location = new System.Drawing.Point(6, 164);
+            this.binaryBox.Name = "binaryBox";
+            this.binaryBox.ReadOnly = true;
+            this.binaryBox.Size = new System.Drawing.Size(526, 98);
+            this.binaryBox.TabIndex = 16;
+            this.binaryBox.Text = "";
             // 
             // keyBoxProcessed
             // 
@@ -188,15 +197,6 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // binaryBox
-            // 
-            this.binaryBox.Location = new System.Drawing.Point(6, 164);
-            this.binaryBox.Name = "binaryBox";
-            this.binaryBox.ReadOnly = true;
-            this.binaryBox.Size = new System.Drawing.Size(526, 98);
-            this.binaryBox.TabIndex = 16;
-            this.binaryBox.Text = "";
-            // 
             // Vernam
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,6 +205,7 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupVernam);
             this.Name = "Vernam";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вернам";
             this.groupVernam.ResumeLayout(false);
             this.groupVernam.PerformLayout();

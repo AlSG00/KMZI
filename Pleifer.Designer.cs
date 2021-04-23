@@ -221,6 +221,7 @@
             this.Controls.Add(this.groupPleifer);
             this.Controls.Add(this.radioButton1);
             this.Name = "Pleifer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Плейфер";
             this.groupPleifer.ResumeLayout(false);
             this.groupPleifer.PerformLayout();

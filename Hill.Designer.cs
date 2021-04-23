@@ -221,6 +221,7 @@
             this.Controls.Add(this.groupHill);
             this.Controls.Add(this.radioButton1);
             this.Name = "Hill";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Криптосистема Хилла";
             this.groupHill.ResumeLayout(false);
             this.groupHill.PerformLayout();

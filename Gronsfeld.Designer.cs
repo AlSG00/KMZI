@@ -265,6 +265,7 @@
             this.Controls.Add(this.groupGronsfeld);
             this.Controls.Add(this.radioButton1);
             this.Name = "Gronsfeld";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Гронсфельд";
             this.groupGronsfeld.ResumeLayout(false);
             this.groupGronsfeld.PerformLayout();

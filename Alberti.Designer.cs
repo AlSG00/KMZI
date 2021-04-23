@@ -333,6 +333,7 @@
             this.Controls.Add(this.groupAlberti);
             this.Controls.Add(this.radioButton1);
             this.Name = "Alberti";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Диск Альберти";
             this.groupAlberti.ResumeLayout(false);
             this.groupAlberti.PerformLayout();

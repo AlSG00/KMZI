@@ -265,6 +265,7 @@
             this.Controls.Add(this.groupVizhiner);
             this.Controls.Add(this.radioButton1);
             this.Name = "Vizhiner";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Виженер";
             this.groupVizhiner.ResumeLayout(false);
             this.groupVizhiner.PerformLayout();

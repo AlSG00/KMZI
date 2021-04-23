@@ -30,6 +30,8 @@
         {
             this.button4 = new System.Windows.Forms.Button();
             this.groupGamma = new System.Windows.Forms.GroupBox();
+            this.keyBox = new System.Windows.Forms.RichTextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.startKeyBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -41,8 +43,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.keyBox = new System.Windows.Forms.RichTextBox();
             this.groupGamma.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +74,22 @@
             this.groupGamma.Size = new System.Drawing.Size(539, 539);
             this.groupGamma.TabIndex = 39;
             this.groupGamma.TabStop = false;
+            // 
+            // keyBox
+            // 
+            this.keyBox.Location = new System.Drawing.Point(58, 213);
+            this.keyBox.Name = "keyBox";
+            this.keyBox.ReadOnly = true;
+            this.keyBox.Size = new System.Drawing.Size(474, 87);
+            this.keyBox.TabIndex = 42;
+            this.keyBox.Text = "";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(6, 516);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(526, 17);
+            this.progressBar1.TabIndex = 41;
             // 
             // startKeyBox
             // 
@@ -168,22 +184,6 @@
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(6, 516);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(526, 17);
-            this.progressBar1.TabIndex = 41;
-            // 
-            // keyBox
-            // 
-            this.keyBox.Location = new System.Drawing.Point(58, 213);
-            this.keyBox.Name = "keyBox";
-            this.keyBox.ReadOnly = true;
-            this.keyBox.Size = new System.Drawing.Size(474, 87);
-            this.keyBox.TabIndex = 42;
-            this.keyBox.Text = "";
-            // 
             // Gamma
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,6 +192,7 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupGamma);
             this.Name = "Gamma";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Гаммирование";
             this.groupGamma.ResumeLayout(false);
             this.groupGamma.PerformLayout();
