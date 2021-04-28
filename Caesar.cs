@@ -19,7 +19,6 @@ namespace KMZI
 
         bool stop;
         int key;
-        //int n;//мощность алфавита
 
         public Caesar()
         {

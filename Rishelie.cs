@@ -14,7 +14,6 @@ namespace KMZI
     {
         int messageLength; //длина сообщения без пробелов. Пригодиться для проверки корректности ввода ключа
         int keyLength = 0;
-        int test = 0; // потом удалить
 
         public Rishelie()
         {
