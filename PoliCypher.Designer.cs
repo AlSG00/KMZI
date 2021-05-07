@@ -29,7 +29,8 @@
         private void InitializeComponent()
         {
             this.button4 = new System.Windows.Forms.Button();
-            this.groupHitIndex = new System.Windows.Forms.GroupBox();
+            this.groupPoliCypher = new System.Windows.Forms.GroupBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.indexBox = new System.Windows.Forms.RichTextBox();
@@ -41,9 +42,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.button3 = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.groupHitIndex.SuspendLayout();
+            this.groupPoliCypher.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,23 +57,31 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // groupHitIndex
+            // groupPoliCypher
             // 
-            this.groupHitIndex.Controls.Add(this.listBox1);
-            this.groupHitIndex.Controls.Add(this.button6);
-            this.groupHitIndex.Controls.Add(this.button5);
-            this.groupHitIndex.Controls.Add(this.indexBox);
-            this.groupHitIndex.Controls.Add(this.numericUpDown1);
-            this.groupHitIndex.Controls.Add(this.resultBox);
-            this.groupHitIndex.Controls.Add(this.textBox1);
-            this.groupHitIndex.Controls.Add(this.button1);
-            this.groupHitIndex.Controls.Add(this.label1);
-            this.groupHitIndex.Controls.Add(this.button2);
-            this.groupHitIndex.Location = new System.Drawing.Point(12, 44);
-            this.groupHitIndex.Name = "groupHitIndex";
-            this.groupHitIndex.Size = new System.Drawing.Size(911, 555);
-            this.groupHitIndex.TabIndex = 39;
-            this.groupHitIndex.TabStop = false;
+            this.groupPoliCypher.Controls.Add(this.listBox1);
+            this.groupPoliCypher.Controls.Add(this.button6);
+            this.groupPoliCypher.Controls.Add(this.button5);
+            this.groupPoliCypher.Controls.Add(this.indexBox);
+            this.groupPoliCypher.Controls.Add(this.numericUpDown1);
+            this.groupPoliCypher.Controls.Add(this.resultBox);
+            this.groupPoliCypher.Controls.Add(this.textBox1);
+            this.groupPoliCypher.Controls.Add(this.button1);
+            this.groupPoliCypher.Controls.Add(this.label1);
+            this.groupPoliCypher.Controls.Add(this.button2);
+            this.groupPoliCypher.Location = new System.Drawing.Point(12, 44);
+            this.groupPoliCypher.Name = "groupPoliCypher";
+            this.groupPoliCypher.Size = new System.Drawing.Size(911, 555);
+            this.groupPoliCypher.TabIndex = 39;
+            this.groupPoliCypher.TabStop = false;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(696, 61);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(209, 225);
+            this.listBox1.TabIndex = 21;
             // 
             // button6
             // 
@@ -182,14 +190,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(696, 61);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(209, 225);
-            this.listBox1.TabIndex = 21;
-            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -201,7 +201,6 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 41;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // PoliCypher
             // 
@@ -211,12 +210,12 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.groupHitIndex);
+            this.Controls.Add(this.groupPoliCypher);
             this.Name = "PoliCypher";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Криптоанализ полиалфавитных шифров";
-            this.groupHitIndex.ResumeLayout(false);
-            this.groupHitIndex.PerformLayout();
+            this.groupPoliCypher.ResumeLayout(false);
+            this.groupPoliCypher.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
@@ -225,7 +224,7 @@
         #endregion
 
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.GroupBox groupHitIndex;
+        private System.Windows.Forms.GroupBox groupPoliCypher;
         private System.Windows.Forms.RichTextBox resultBox;
         private System.Windows.Forms.RichTextBox textBox1;
         private System.Windows.Forms.Button button1;

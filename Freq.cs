@@ -162,17 +162,20 @@ namespace KMZI
                 alphabet_sorted[i] = sortedBox.Text[i];
             }
 
+            string result = "";
             for (int i = 0; i < textBox1.TextLength; i++)
             {
                 if (alphabet_sorted.Contains(textBox1.Text[i]))
                 {
-                    textBox2.Text += alphabet_sample_temp[Array.IndexOf(alphabet_sorted, textBox1.Text[i])];
+                    result += alphabet_sample_temp[Array.IndexOf(alphabet_sorted, textBox1.Text[i])];
                 }
                 else
                 {
-                    textBox2.Text += textBox1.Text[i];
+                    result += textBox1.Text[i];
                 }
             }
+            textBox2.Clear();
+            textBox2.Text += result;
             alphabet_freq = calculate_frequency(textBox2.Text, alphabet);
             this.chart1.Series["Current"].Points.Clear();
             hystogram_generate_current(alphabet, alphabet_freq);

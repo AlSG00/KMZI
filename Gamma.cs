@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections;
+using System.CodeDom.Compiler;
+
 
 namespace KMZI
 {
@@ -22,140 +25,106 @@ namespace KMZI
             startKeyBox.Enabled = false;
         }
 
-        char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
-                            'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я',
-                            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-                            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                            '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
-
         int mod = 6655; // Модуль (mod >= 2)
-        string filePath = @"D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\out.txt";
-
+        byte[] tmpIn;
+        byte[] tmpOut;
+        byte[] text_byte;
+        bool is_text_detailed = false;
+        bool is_text_from_file = false;
         // Кнопка "Преобразовать"
         private void button2_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
             keyBox.Clear();
-            progressBar1.Value = 0;
 
             //Если ключ не отвечает условиям, то будет ошибка
-            if(!isStartKeyCorrect(startKeyBox.Text))
+            if (!isStartKeyCorrect(startKeyBox.Text))
             {
                 MessageBox.Show("Некорректный стартовый ключ!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 startKeyBox.Clear();
                 return;
             }
-            startKeyBox.Text = Convert.ToString(Convert.ToInt32(startKeyBox.Text) % 6655);
-            char[] symbol = new char[textBox1.TextLength];
-            int[] symbol_pos = new int[textBox1.TextLength];
-            int[] text = new int[textBox1.TextLength];
+            startKeyBox.Text = Convert.ToString(Convert.ToInt32(startKeyBox.Text) % mod);
 
-            progressBar1.Maximum = textBox1.TextLength;
-            progressBar1.Step = 1;
-            // Преобразуем строку в числа
-            for (int i = 0; i < textBox1.TextLength; i++)
+            text_byte = null;
+
+            if (tmpIn == null && is_text_from_file == false)
             {
-                if (alphabet.Contains(textBox1.Text[i])) 
-                {
-                    text[i] = Array.IndexOf(alphabet, textBox1.Text[i]);
-                }
-                else
-                {
-                    text[i] = 0;
-                    symbol[i] = textBox1.Text[i];
-                    symbol_pos[i] = 1;
-                }
-                progressBar1.PerformStep();
+                //textBox1.Text = BitConverter.ToString(tmpIn);
+                tmpIn = Encoding.Default.GetBytes(textBox1.Text);               
             }
 
-            // Конвертируем последовательность в байтовую
-            ushort[] text_byte = convert_to_byte(text);
-
-            // Конвертирум байтовую последовательность в двоичную
-            string[] text_binary = convert_to_binary(text_byte, 16);
+            text_byte = tmpIn;
+            //else
+            //{
+            //    text_byte = tmpIn;
+            //    //tmpIn = null;
+            //}
 
             // Генерируем случайную числовую последовательность
-            int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()));
+            int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()), text_byte.Length);
 
             // Вывод ключа через файл
-            StreamWriter sw = new StreamWriter(filePath);       
+            StreamWriter sw = new StreamWriter("out.txt");       
             for (int i = 0; i < key.Length; i++)
             { 
-                sw.Write(key[i] + " ");
+                sw.Write(key[i]);
             }
             sw.Close();
-            StreamReader str = new StreamReader(filePath);
-            keyBox.Text += str.ReadToEnd();
+            StreamReader str = new StreamReader("out.txt");
+            string key_str = str.ReadToEnd();
+            key_str = key_str.Substring(0, text_byte.Length);
+            keyBox.Text = key_str;         
             str.Close();
 
-            // Конвертируем последовательность в байтовую
-            ushort[] key_byte = convert_to_byte(key);
+            byte[] key_byte = Encoding.Default.GetBytes(key_str);
+            var key_binary = new BitArray(key_byte);
+            var text_binary = new BitArray(text_byte);
 
-            // Конвертирум байтовую последовательность в двоичную
-            string[] key_binary = convert_to_binary(key_byte, 16);
+            text_binary.Xor(key_binary);
 
-            // Шифруем исключающим ИЛИ
-            string[] result_binary = convert_xor(text_binary, key_binary);
+            tmpOut = new byte[text_byte.Length];
+            text_binary.CopyTo(tmpOut, 0);
 
-            // Конвертируем двочную последовательность в десятичную
-            ushort[] result_byte = convert_to_decimal(result_binary, 16);
-          
-            // Вывод результата через файл
-            sw = new StreamWriter(filePath);
-            //progressBar1.Maximum = result_byte.Length;
-            //progressBar1.Step = 1;
-            for (int i = 0; i < result_byte.Length; i++)
+            if (is_text_detailed)
             {
-                if (symbol_pos[i] == 0)
-                {
-                    sw.Write(alphabet[result_byte[i]]);
-                }
-                else
-                {
-                    sw.Write(symbol[i]);
-                }
-                //progressBar1.PerformStep();
+                textBox2.Text = BitConverter.ToString(tmpOut);
             }
-            sw.Close();
-            str = new StreamReader(filePath);
-            textBox2.Text += str.ReadToEnd();
-            str.Close();
+            else
+            {
+                textBox2.Text = Encoding.Default.GetString(tmpOut);
+            }
+            //textBox2.Text = Encoding.Default.GetString(tmpOut);
         }
 
         // Кнопка "Открыть файл"
         private void button3_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog(); // как открывать файлы разны форматов??????
+            openFileDialog1.ShowDialog(); 
         }
 
         // Чтение файла и вывод содержимого в textBox1
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            //textBox1.Text = System.IO.File.ReadAllText(openFileDialog1.FileName);
+            tmpIn = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+            textBox1.Text = Encoding.Default.GetString(tmpIn);
 
-            StreamReader str = new StreamReader(openFileDialog1.FileName); // Как сохранять файлы в разные форматы??????
-            textBox1.Clear();
-            textBox1.Text += str.ReadToEnd();
-            str.Close();
-
-            //FileStream fstream = File.OpenRead(openFileDialog1.FileName);
-            //byte[] govno = null;
-            //fstream.Read(govno, 0, Convert.ToInt32(fstream.Length));
-            //for(int i = 0; i < govno.Length; i++)
-            //{
-            //    textBox1.Text += govno[i];
-            //}
-
-            //textBox1.Text += File.OpenRead(openFileDialog1.FileName);
-            /*textBox1.Text += fstream.Read()*/
-            //keyBox.Clear();
-            //Process.Start(openFileDialog1.FileName); // лол
-
-            //byte[] byteArray = File.ReadAllBytes(openFileDialog1.FileName);
-            //for(int i = 0; i < byteArray.Length; i++)
-            //{
-            //    textBox1.Text += byteArray[i];
-            //}
+            is_text_from_file = true;
+            tmpIn = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+            //inBox.Text = Encoding.Default.GetString(inFile);
+           // progressBar1.Visible = false;
+           // progressBar1.Value = 0;
+            //inBox.Text = BitConverter.ToString(inFile);
+            if (is_text_detailed)
+            {
+                textBox1.Text = BitConverter.ToString(tmpIn);
+            }
+            else
+            {
+                textBox1.Text = Encoding.Default.GetString(tmpIn);
+                //tmpIn
+                //textBox1.Text = BitConverter.ToString(tmpIn);
+            }
         }
 
         // Кнопка "Сохранить файл"
@@ -167,24 +136,19 @@ namespace KMZI
         // Сохранение в файл
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            //System.IO.File.WriteAllText(saveFileDialog1.FileName, textBox2.Text);
-            StreamWriter sw = new StreamWriter(saveFileDialog1.FileName);
-            for(int i = 0; i < textBox2.TextLength; i++)
-            {
-                sw.Write(textBox2.Text[i]);
-            }
-            sw.Close();
+            System.IO.File.WriteAllBytes(saveFileDialog1.FileName, tmpOut);
         }
 
         // Кнопка "Очистить поля"
         private void button1_Click(object sender, EventArgs e)
         {
+            is_text_from_file = false;
             textBox1.Clear();
             textBox2.Clear();
             keyBox.Clear();
             startKeyBox.Clear();
-            progressBar1.Value = 0;
             button2.Enabled = false;
+            tmpIn = null;
         }
 
         // Кнопка "Закрыть"
@@ -194,19 +158,22 @@ namespace KMZI
         }
 
         // Функция генерации ключа линейным конгруэнтным методом
-       int[] generate_key(int startIndex)
+       int[] generate_key(int startIndex, int length)
         {            
             int a = 936; // Множитель (0 <= a < mod)
             int c = 1399; // Приращение (0 <= c < mod)
             int x = startIndex; // Начальное значение (0 <= x < mod)
-            int[] key = new int[textBox1.TextLength];
+            int[] key = new int[text_byte.Length];
             key[0] = x;
 
-            for(int i = 1; i < textBox1.TextLength; i++)
+            for(int i = 1; i < length; i++)
             {
                 key[i] = (a * key[i - 1] + c) % mod;
             }
-
+            //for (int i = 0; i < length; i++)
+            //{
+            //    key[i] %= 256;
+            //}
             return key;
         }
 
@@ -229,109 +196,10 @@ namespace KMZI
             return true;
         }
 
-        // Конвертирование десятичного числа в двоичное
-        string[] convert_to_binary(ushort[] b_text, int bytes)
-        {
-            string[] array_of_bytes = new string[b_text.Length];
-            for (int i = 0; i < b_text.Length; i++)
-            {
-                array_of_bytes[i] = Convert.ToString(b_text[i], 2);
-                while (array_of_bytes[i].Length < bytes)
-                {
-                    array_of_bytes[i] = array_of_bytes[i].Insert(0, "0");
-                }
-                if(array_of_bytes[i].Length > bytes)
-                {
-                    string temp = array_of_bytes[i];
-                    array_of_bytes[i] = null;
-                    int count = 0;
-                    while (array_of_bytes[i].Length < bytes)
-                    {
-                        array_of_bytes[i] += temp[count];
-                        count++;
-                    }
-                }
-            }
-            return array_of_bytes;
-        }
-
-        // Конвертирование десятичных чисел в байтовый формат
-        ushort[] convert_to_byte(int[] key)
-        {
-            ushort[] key_byte = new ushort[key.Length];
-            for (int i = 0; i < key.Length; i++)
-            {
-                key_byte[i] = Convert.ToUInt16(key[i]);
-            }
-            return key_byte;
-        }
-
-        // Исключающее ИЛИ
-        string[] convert_xor(string[] text, string[] key)
-        {
-            string[] answer = new string[text.Length];
-            string text_temp = null;
-            string key_temp = null;
-            string answer_temp = null;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                text_temp = text[i];
-                key_temp = key[i];
-
-                for (int j = 0; j < text_temp.Length; j++)
-                {
-                    if (text_temp[j] == key_temp[j])
-                    {
-                        answer_temp += "0";
-                    }
-                    else
-                    {
-                        answer_temp += "1";
-                    }
-                }
-                answer[i] = answer_temp;
-                text_temp = null;
-                key_temp = null;
-                answer_temp = null;
-            }
-            return answer;
-        }
-
-        // Конвертирование двоичных чисел в десятичные
-        ushort[] convert_to_decimal(string[] array, int bytes)
-        {
-            ushort[] answer = new ushort[array.Length];
-            int answer_byte = 0;
-            string text_temp = null;
-
-            //progressBar1.Maximum = array.Length;
-            //progressBar1.Step = 1;
-
-            for (int i = 0; i < array.Length; i++)
-            {
-                text_temp = array[i];
-
-                for (int j = 0; j < text_temp.Length; j++)
-                {
-                    if (text_temp[j] == '1')
-                    {
-                        answer_byte += Convert.ToUInt16(Math.Pow(2, bytes - 1 - j));
-                    }
-                }
-                answer[i] = Convert.ToUInt16(answer_byte % alphabet.Length);
-                answer_byte = 0;
-                //progressBar1.PerformStep();
-
-            }
-
-            return answer;
-        }
-
         // Выполняется, если изменилось содержимое startKeyBox
         private void startKeyBox_TextChanged(object sender, EventArgs e)
         {
-            if(startKeyBox.TextLength > 0 && startKeyBox.TextLength < 9 /*&& textBox1.TextLength > 0*/)
+            if(startKeyBox.TextLength > 0 && startKeyBox.TextLength < 6)
             {
                 button2.Enabled = true;
             }
@@ -352,6 +220,31 @@ namespace KMZI
             {
                 startKeyBox.Clear();
                 startKeyBox.Enabled = false;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (tmpIn != null /*&& tmpOut != null*/)
+            {
+                //byte[] temp = new byte[inFile.Length];
+                //inFile.CopyTo(temp, 0);
+                tmpOut.CopyTo(tmpIn, 0);
+                //temp.CopyTo(outFile, 0);
+                textBox1.Clear();
+                textBox2.Text = textBox1.Text;
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                is_text_detailed = true;
+            }
+            else
+            {
+                is_text_detailed = false;
             }
         }
     }

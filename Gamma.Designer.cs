@@ -31,7 +31,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.groupGamma = new System.Windows.Forms.GroupBox();
             this.keyBox = new System.Windows.Forms.RichTextBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.startKeyBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -43,6 +42,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.button6 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupGamma.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,8 +59,8 @@
             // 
             // groupGamma
             // 
+            this.groupGamma.Controls.Add(this.button6);
             this.groupGamma.Controls.Add(this.keyBox);
-            this.groupGamma.Controls.Add(this.progressBar1);
             this.groupGamma.Controls.Add(this.startKeyBox);
             this.groupGamma.Controls.Add(this.label2);
             this.groupGamma.Controls.Add(this.button5);
@@ -84,16 +85,9 @@
             this.keyBox.TabIndex = 42;
             this.keyBox.Text = "";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(6, 516);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(526, 17);
-            this.progressBar1.TabIndex = 41;
-            // 
             // startKeyBox
             // 
-            this.startKeyBox.Location = new System.Drawing.Point(7, 235);
+            this.startKeyBox.Location = new System.Drawing.Point(7, 231);
             this.startKeyBox.Name = "startKeyBox";
             this.startKeyBox.Size = new System.Drawing.Size(45, 20);
             this.startKeyBox.TabIndex = 14;
@@ -102,7 +96,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 219);
+            this.label2.Location = new System.Drawing.Point(6, 215);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 13;
@@ -133,7 +127,7 @@
             this.textBox2.Location = new System.Drawing.Point(6, 338);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(526, 172);
+            this.textBox2.Size = new System.Drawing.Size(526, 195);
             this.textBox2.TabIndex = 9;
             this.textBox2.Text = "";
             // 
@@ -184,11 +178,34 @@
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
+            // button6
+            // 
+            this.button6.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.Location = new System.Drawing.Point(7, 257);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(45, 45);
+            this.button6.TabIndex = 41;
+            this.button6.Text = "↑";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(18, 576);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(115, 17);
+            this.checkBox1.TabIndex = 41;
+            this.checkBox1.Text = "Подробный текст";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Gamma
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(562, 614);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.groupGamma);
             this.Name = "Gamma";
@@ -197,6 +214,7 @@
             this.groupGamma.ResumeLayout(false);
             this.groupGamma.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -215,7 +233,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.RichTextBox keyBox;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

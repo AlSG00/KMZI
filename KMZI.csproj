@@ -65,11 +65,17 @@
     <Compile Include="Gamma.Designer.cs">
       <DependentUpon>Gamma.cs</DependentUpon>
     </Compile>
-    <Compile Include="GOST.cs">
+    <Compile Include="GOST\GOST.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GOST.Designer.cs">
+    <Compile Include="GOST\GOST.Designer.cs">
       <DependentUpon>GOST.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GOST\GOST_Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GOST\GOST_Options.Designer.cs">
+      <DependentUpon>GOST_Options.cs</DependentUpon>
     </Compile>
     <Compile Include="Hill.cs">
       <SubType>Form</SubType>
@@ -178,8 +184,11 @@
     <EmbeddedResource Include="Gamma.resx">
       <DependentUpon>Gamma.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GOST.resx">
+    <EmbeddedResource Include="GOST\GOST.resx">
       <DependentUpon>GOST.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GOST\GOST_Options.resx">
+      <DependentUpon>GOST_Options.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Hill.resx">
       <DependentUpon>Hill.cs</DependentUpon>

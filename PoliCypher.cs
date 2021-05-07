@@ -20,14 +20,14 @@ namespace KMZI
             button6.Enabled = false;
             button5.Enabled = false;
         }
-        
+
         // Один экземпляр класса соответствует одному столбцу
         class Column
         {
             public int[] occurrence_of_letters { get; set; } // Число встреченных букв
             public int count_of_letters { get; set; }        // Сумма всех встреченных букв
             public float match_index { get; set; }           // Индекс совпадений
-            public float match_index_max = 0f;               // 
+            public float match_index_max = 0f;               
             public int max_index_shift { get; set; }         // Смещение, при котором индекс достигает наибольшего значения
         }
 
@@ -39,25 +39,18 @@ namespace KMZI
             public int gcd;
         }
 
-        char[] rus = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 
-                       'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 
-                       'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 
+        char[] rus = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з',
+                       'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р',
+                       'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ',
                        'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
 
         char[] eng = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
                        'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                        's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-       
-
-        float hit_index_rus = 0.0553f;
-        float hit_index_eng = 0.0644f;
-        float current_hit_index; // Текущий индекс - образец
-
         bool isRussian = false; // Является ли текст русскоязычным
         bool textError = false; // Поддается ли текст обработке
         char[] alphabet = null; // Текущий алфавит
-
 
         Column[] column = null;
         Column[] column_shifted = null;
@@ -69,20 +62,15 @@ namespace KMZI
             indexBox.Clear();
             resultBox.Clear();
             listBox1.Items.Clear();
-
             column_shifted = null;
-
             isRussian = check_language(textBox1.Text); // Смотрим, какой язык будет испоьлзоваться в дальнейшей работе
 
-            if (!textError)
-            {
-                Language_setup(); // Исходя из функции выше, проводим первоначальную настройку
-            }
-            else
+            if (textError)
             {
                 MessageBox.Show("Загруженный текст не поддается обработке", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            Language_setup(); // Исходя из функции выше, проводим первоначальную настройку
 
             switch (comboBox1.SelectedIndex)
             {
@@ -109,15 +97,15 @@ namespace KMZI
         {
             float index = 0f;
 
-            for(int i = 0; i < letters.Length; i++)
+            for (int i = 0; i < letters.Length; i++)
             {
-                if(letters[i] != 0)
+                if (letters[i] != 0)
                 {
                     index += letters[i] * (letters[i] - 1);
-                }              
+                }
             }
             index = index / (count * (count - 1));
-            
+
             return index;
         }
 
@@ -166,15 +154,13 @@ namespace KMZI
         {
             if (!textError)
             {
-                if (isRussian)                                          
+                if (isRussian)
                 {
                     alphabet = rus;
-                    current_hit_index = hit_index_rus;
                 }
                 else
                 {
                     alphabet = eng;
-                    current_hit_index = hit_index_eng;
                 }
             }
         }
@@ -203,7 +189,15 @@ namespace KMZI
         private void button5_Click(object sender, EventArgs e)
         {
             resultBox.Clear();
+
+            if (listBox1.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Выберите ключ", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                return;
+            }
+
             int count = 0;
+
             string key = listBox1.SelectedItem.ToString();
             for (int i = 0; i < textBox1.TextLength; i++)
             {
@@ -233,8 +227,6 @@ namespace KMZI
         {
             listBox1.Items.Clear();
 
-            //if(column == null)
-
             string text = "";
             for (int x = 0; x < textBox1.TextLength; x++)
             {
@@ -244,33 +236,33 @@ namespace KMZI
                 }
             }
 
-            //{
+
             column = new Column[Convert.ToInt32(numericUpDown1.Value)];
-                for (int i = 0; i < column.Length; i++)
-                {
-                    column[i] = new Column();
-                    column[i].occurrence_of_letters = new int[alphabet.Length];
+            for (int i = 0; i < column.Length; i++)
+            {
+                column[i] = new Column();
+                column[i].occurrence_of_letters = new int[alphabet.Length];
 
-                }
+            }
 
-                // Идём по каждому столбцу
-                for (int i = 0; i < column.Length; i++)
+            // Идём по каждому столбцу
+            for (int i = 0; i < column.Length; i++)
+            {
+                //  Считаем стречаемые буквы в каждом столбце
+                for (int j = i; j < text.Length; j += column.Length)
                 {
-                    //  Считаем стречаемые буквы в каждом столбце
-                    for (int j = i; j < text.Length; j += column.Length)
+                    if (j < text.Length)
                     {
-                        if (j < text.Length)
+                        if (alphabet.Contains(Char.ToLower(text[j])))
                         {
-                            if (alphabet.Contains(Char.ToLower(text[j])))
-                            {
-                                column[i].occurrence_of_letters[Array.IndexOf(alphabet, Char.ToLower(text[j]))] += 1;
-                            }
-                            column[i].count_of_letters++;
+                            column[i].occurrence_of_letters[Array.IndexOf(alphabet, Char.ToLower(text[j]))] += 1;
                         }
+                        column[i].count_of_letters++;
                     }
-                    column[i].match_index = Calculate_match_index(column[i].occurrence_of_letters, column[i].count_of_letters);
                 }
-            //}
+                column[i].match_index = Calculate_match_index(column[i].occurrence_of_letters, column[i].count_of_letters);
+            }
+
 
             column_shifted = new Column[column.Length];
             for (int i = 0; i < column.Length; i++)
@@ -279,13 +271,13 @@ namespace KMZI
                 column_shifted[i].occurrence_of_letters = new int[alphabet.Length];
             }
 
-            for (int x = 1; x < alphabet.Length; x++) 
+            for (int x = 1; x < alphabet.Length; x++)
             {
-                string temp_text = Caesar_shift(text, x); 
+                string temp_text = Caesar_shift(text, x);
 
-                for (int i = 1; i < column_shifted.Length; i++) 
+                for (int i = 1; i < column_shifted.Length; i++)
                 {
-                    
+
                     column_shifted[i].count_of_letters = 0;
                     for (int k = 0; k < alphabet.Length; k++)
                     {
@@ -312,7 +304,6 @@ namespace KMZI
                         column_shifted[i].match_index_max = column_shifted[i].match_index;
                         column_shifted[i].max_index_shift = x;
                     }
-                    //column[i].match_index = Calculate_hit_index(column[i].occurrence_of_letters, column[i].count_of_letters);
                 }
             }
 
@@ -324,70 +315,12 @@ namespace KMZI
             button5.Enabled = true;
         }
 
-        //private void Get_keys_for_match_index()
-        //{
-        //    //float max_rec_index = 0f;
-        //    //int max_index_shift = 0;
-        //    listBox1.Items.Clear();
-
-        //    column_shifted = new Column[column.Length];
-        //    for (int i = 0; i < column.Length; i++)
-        //    {
-        //        column_shifted[i] = new Column();
-        //        column_shifted[i].occurrence_of_letters = new int[alphabet.Length];
-        //    }
-
-        //    for (int x = 1; x < alphabet.Length; x++) // цикл в котором будут всякие сдвиги и поиск максимального, сука, индекса
-        //    {
-        //        string temp_text = Caesar_shift(textBox1.Text, x); // Проверить правильность
-
-        //        for (int i = 1; i < column_shifted.Length; i++) // НУЖНО ЛИ НАЧИНАТЬ СДВИГИ С 1! ????????
-        //        {
-        //            // Без понятия, нужно ли так делать???
-        //            column_shifted[i].count_of_letters = 0;
-        //            for (int k = 0; k < alphabet.Length; k++)
-        //            {
-        //                column_shifted[i].occurrence_of_letters[k] = 0;
-        //            }
-
-        //            //  Считаем встречаемые буквы в каждом столбце
-        //            for (int j = i; j < temp_text.Length; j += column_shifted.Length)
-        //            {
-        //                if (j < temp_text.Length)
-        //                {
-        //                    if (alphabet.Contains(Char.ToLower(temp_text[j])))
-        //                    {
-        //                        column_shifted[i].occurrence_of_letters[Array.IndexOf(alphabet, Char.ToLower(temp_text[j]))] += 1;
-        //                    }
-        //                    column_shifted[i].count_of_letters++;
-        //                }
-        //            }
-        //            column_shifted[i].match_index = Calculate_reciprocal_match_index(column[0].occurrence_of_letters, column[0].count_of_letters,
-        //                                                                             column_shifted[i].occurrence_of_letters, column_shifted[i].count_of_letters);
-
-        //            if (column_shifted[i].match_index > column_shifted[i].match_index_max)
-        //            {
-        //                column_shifted[i].match_index_max = column_shifted[i].match_index;
-        //                column_shifted[i].max_index_shift = x;
-        //            }
-        //            //column[i].match_index = Calculate_hit_index(column[i].occurrence_of_letters, column[i].count_of_letters);
-        //        }
-        //    }
-
-        //    for (int i = 0; i < alphabet.Length; i++)
-        //    {
-        //        listBox1.Items.Add(Generate_keys(i));
-        //    }
-
-        //    button5.Enabled = true;
-        //}
-
         // Фактически, шифр Цезаря для сдвига текста
         string Caesar_shift(string text, int shift)
         {
             string result = "";
 
-            for(int i = 0; i < text.Length; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 if (alphabet.Contains(Char.ToLower(text[i])))
                 {
@@ -400,14 +333,13 @@ namespace KMZI
             }
 
             return result;
-           // text += alphabet[Math.Abs((Array.IndexOf(alphabet, text[i]) + 33 + key) % 33)];
         }
 
         string Shift_cycle(string text, int shift)
         {
             string result = "";
 
-            for(int i = 0; i < text.Length; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 result += text[(i + shift) % text.Length];
             }
@@ -421,7 +353,7 @@ namespace KMZI
             string result = "";
 
             result += alphabet[shift];
-            for(int i = 1; i < column_shifted.Length; i++)
+            for (int i = 1; i < column_shifted.Length; i++)
             {
                 result += alphabet[(shift + alphabet.Length - column_shifted[i].max_index_shift) % alphabet.Length];
             }
@@ -488,15 +420,15 @@ namespace KMZI
                 }
             }
 
-            for (int x = 1; x < alphabet.Length; x++)
+            for (int x = 1; x < text.Length; x++)
             {
                 float coin = 0f;
                 float corr = 0f;
                 string temp_text = Shift_cycle(textBox1.Text, x);
 
-                for(int i = 0; i < text.Length; i++)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    if(text[i] == temp_text[i])
+                    if (text[i] == temp_text[i])
                     {
                         coin++;
                     }
@@ -514,7 +446,7 @@ namespace KMZI
             string text = "";
             for (int x = 0; x < textBox1.TextLength; x++)
             {
-                if(alphabet.Contains(Char.ToLower(textBox1.Text[x])))
+                if (alphabet.Contains(Char.ToLower(textBox1.Text[x])))
                 {
                     text += textBox1.Text[x];
                 }
@@ -570,7 +502,6 @@ namespace KMZI
 
                     for (int j = 1; j < kaziski[i].match_distance.Length; j++)
                     {
-                        //result = Calculate_GCD(result, kaziski[i].match_distance[j]);
                         result = Calculate_GCD(kaziski[i].match_distance[j], result);
                     }
 
@@ -583,7 +514,6 @@ namespace KMZI
             {
                 if (kaziski[i].match_position.Count > 1)
                 {
-                    //indexBox.Text += (i + 1) + ") " + kaziski[i].template + " - " + kaziski[i].gcd + Environment.NewLine;
                     count++;
                 }
             }
@@ -594,15 +524,13 @@ namespace KMZI
             {
                 if (kaziski[i].match_position.Count > 1)
                 {
-                    //indexBox.Text += (i + 1) + ") " + kaziski[i].template + " - " + kaziski[i].gcd + Environment.NewLine;
-                   // count++;
                     gcd_array[count] = kaziski[i].gcd;
                     count++;
                 }
-               
+
             }
-            
-            if(gcd_array.Length == 0)
+
+            if (gcd_array.Length == 0)
             {
                 indexBox.Text += "Нет совпадений";
                 return;
@@ -628,11 +556,6 @@ namespace KMZI
                 b = a % (a = b);
 
             return a;
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
