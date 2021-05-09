@@ -502,6 +502,7 @@ namespace KMZI
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
+            aBox.Clear();
             keyBox.Clear();
             processBox.Clear();
             keyBox.Enabled = false;
@@ -689,6 +690,7 @@ namespace KMZI
         // Создание нового алфавита на основе ключа
         public string alphabet_processing(string alph) 
         {
+            int index = 0;
             string tempo = null;
             alph.ToLower(); // Ключ в нижний регистр
             tempo = alph[0].ToString();
@@ -719,6 +721,16 @@ namespace KMZI
                         }
                     }
                 }
+
+                for(int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        aBox.Text += alph[index];
+                        index++;
+                    }
+                    aBox.Text += "\n";
+                }
             }
             if (Rus == true)
             {
@@ -731,6 +743,16 @@ namespace KMZI
                             alph += m_rus[i, j];
                         }
                     }
+                }
+
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        aBox.Text += alph[index];
+                        index++;
+                    }
+                    aBox.Text += "\n";
                 }
             }
             return alph;

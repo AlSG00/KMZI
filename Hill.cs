@@ -119,7 +119,6 @@ namespace KMZI
 
                 count = 0;
                 keyBoxProcessed.Clear();
-                //key = null;
                 key_algebraic = null;
                 key_answer = null;
                 _key = null;

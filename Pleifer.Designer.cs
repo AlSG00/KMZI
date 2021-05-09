@@ -44,6 +44,7 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.aBox = new System.Windows.Forms.RichTextBox();
             this.groupPleifer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,6 +72,7 @@
             // 
             // groupPleifer
             // 
+            this.groupPleifer.Controls.Add(this.aBox);
             this.groupPleifer.Controls.Add(this.processBox);
             this.groupPleifer.Controls.Add(this.listBox1);
             this.groupPleifer.Controls.Add(this.keyBox);
@@ -103,7 +105,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(272, 270);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(260, 147);
+            this.listBox1.Size = new System.Drawing.Size(131, 147);
             this.listBox1.TabIndex = 13;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -211,6 +213,15 @@
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
+            // aBox
+            // 
+            this.aBox.Location = new System.Drawing.Point(409, 270);
+            this.aBox.Name = "aBox";
+            this.aBox.ReadOnly = true;
+            this.aBox.Size = new System.Drawing.Size(123, 147);
+            this.aBox.TabIndex = 21;
+            this.aBox.Text = "";
+            // 
             // Pleifer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,5 +259,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RichTextBox processBox;
+        private System.Windows.Forms.RichTextBox aBox;
     }
 }

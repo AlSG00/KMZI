@@ -22,17 +22,22 @@ namespace KMZI
             InitializeComponent();
 
             button6.Enabled = false;
-
             groupBox2.Enabled = false;
             groupBox3.Enabled = false;
             groupBox4.Enabled = false;
             groupBox5.Enabled = false;
             label1.Visible = false;
             label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
             progressBar1.Visible = false;
             label1.Text = "0";
+            label4.Text = "0";
             label1.BackColor = Color.OrangeRed;
+            label4.BackColor = Color.OrangeRed;
             checkBox1.Enabled = false;
+            synchroBox.Enabled = false;
+            keyBox.Enabled = false;
         }
 
         // Набор s-блоков для выполнения замены
@@ -49,6 +54,8 @@ namespace KMZI
         byte[] outFile;                 // Набор выходных байтов (появляется в результате  работы алгоритма)
         bool is_text_from_file = false; // Если текст был прочитан из файла
         bool is_text_detailed;          // Нужен ли подробный вывод (всех байтов)
+        int index = 0;
+        bool is_gamming = false;
 
         GOST_Options options;
 
@@ -57,7 +64,6 @@ namespace KMZI
         {
             outBox.Clear();
 
-            //Thread[] t = new Thread(Perform_Simple_Replacement());
             // Выбор режима работы шифра
             switch (comboBox1.SelectedIndex)
             {
@@ -73,21 +79,21 @@ namespace KMZI
         // Алгоритм шифрования в режиме простой замены
         private void Perform_Simple_Replacement()
         {
-            int index = 0;
-            int count = 0;    
-
-            // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
-            // и его необходимо заполнить данными из поля ввода
-            if(is_text_from_file == false || inFile == null)
-            {
-                inFile = Encoding.Default.GetBytes(inBox.Text);
-            }
+            int count = 0;
+            index = 0;
 
             // Проверка длины ключа
             if (!Check_KeyLength())
                 return;
 
-            // Если выран режим шифрования
+            // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
+            // и его необходимо заполнить данными из поля ввода
+            if (is_text_from_file == false || inFile == null)
+            {
+                inFile = Encoding.Default.GetBytes(inBox.Text);
+            }
+
+            // Если выбран режим шифрования
             if (radioButton1.Checked)
             {
                 // Считаем, сколько байтов не хватает шифруемому тексту до кратности 8-ми
@@ -105,7 +111,7 @@ namespace KMZI
                 // Расширяем исходный массив байтов на нужное количество и в конце приписываем несколько байтов
                 for (int i = 0; i < inTemp.Length; i++)
                 {
-                   inFile[i] = inTemp[i];
+                    inFile[i] = inTemp[i];
                 }
                 for (int i = inTemp.Length; i < inFile.Length; i++)
                 {
@@ -126,31 +132,26 @@ namespace KMZI
 
                 keyBox.Text = key;
             }
-            
+
             byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text); // Переводим текст и ключ в байты
             byte[] text_byte = inFile;
-            //byte[] outFile2 = outFile;
 
             var key_bit = new BitArray(key_byte); // Переводим байтовые значения текста и ключа в биты
             var text_bit = new BitArray(text_byte);
 
             int[,] binary_key = new int[8, 32]; // массив для двоичного представления ключа
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
-                for(int j = 0; j < 32; j++)
+                for (int j = 0; j < 32; j++)
                 {
-                    if(key_bit.Get(index))
+                    if (key_bit.Get(index))
                     {
                         binary_key[i, j] = 1;
                     }
                     index++;
                 }
             }
-            progressBar1.Minimum = 0;
-            progressBar1.Maximum = inFile.Length / 8;
-            progressBar1.Step = 1;
-            progressBar1.Value = 0;
-            progressBar1.Visible = true;
+            ProgressBar_Default();
 
             // Идём по блокам текста
             for (int i = 0; i < inFile.Length; i += 8)
@@ -192,38 +193,8 @@ namespace KMZI
                 index = 0;
                 for (int j = 0; j < 32; j++)
                 {
-
-                    int remainder = 0; // остаток от суммирования (который переносится при сложении в столбик)
-
-                    ////Шаг 1////////////////////////////////////////////////////// 
-                    ////сложение двоичных чисел по модулю 32
-                    for (int m = 31; m >= 0; m--)
-                    {
-                        if (junior_int[m] == 0 && binary_key[index, m] == 0 && remainder == 0)
-                        {
-                            junior_int[m] = 0;
-                            remainder = 0;
-                        }
-                        else if ((junior_int[m] == 0 && binary_key[index, m] == 0 && remainder == 1) ||
-                                 (junior_int[m] == 0 && binary_key[index, m] == 1 && remainder == 0) ||
-                                 (junior_int[m] == 1 && binary_key[index, m] == 0 && remainder == 0))
-                        {
-                            junior_int[m] = 1;
-                            remainder = 0;
-                        }
-                        else if ((junior_int[m] == 0 && binary_key[index, m] == 1 && remainder == 1) ||
-                                 (junior_int[m] == 1 && binary_key[index, m] == 0 && remainder == 1) ||
-                                 (junior_int[m] == 1 && binary_key[index, m] == 1 && remainder == 0))
-                        {
-                            junior_int[m] = 0;
-                            remainder = 1;
-                        }
-                        else if (junior_int[m] == 1 && binary_key[index, m] == 1 && remainder == 1)
-                        {
-                            junior_int[m] = 1;
-                            remainder = 1;
-                        }
-                    }
+                    //Шаг 1 - сложение двоичных чисел по модулю 32
+                    junior_int = Perform_Sum_By_32(junior_int, binary_key);
                     index = (index + 1) % 8; // меняем блок накладываемого ключа
 
                     // При шифровании ключ инвертируется на последние 8 раундов
@@ -231,15 +202,7 @@ namespace KMZI
                     {
                         if (j == 23)
                         {
-                            for (int m = 0; m < binary_key.GetLength(0) / 2; m++)
-                            {
-                                for (int n = 0; n < binary_key.GetLength(1); n++)
-                                {
-                                    int k_temp = binary_key[m, n];
-                                    binary_key[m, n] = binary_key[7 - m, n];
-                                    binary_key[7 - m, n] = k_temp;
-                                }
-                            }
+                            binary_key = Invert_key_GOST(binary_key);
                         }
                     }
                     // При расшифровании ключ инвертируется после первых 8-ми раундов
@@ -247,102 +210,25 @@ namespace KMZI
                     {
                         if (j == 7)
                         {
-                            for (int m = 0; m < binary_key.GetLength(0) / 2; m++)
-                            {
-                                for (int n = 0; n < binary_key.GetLength(1); n++)
-                                {
-                                    int k_temp = binary_key[m, n];
-                                    binary_key[m, n] = binary_key[7 - m, n];
-                                    binary_key[7 - m, n] = k_temp;
-                                }
-                            }
+                            binary_key = Invert_key_GOST(binary_key);
                         }
                     }
 
-                    ////Шаг 2////////////////////////////////////////////////////// 
-                    ////Разбиение младшей части на блоки по 4 бита с целью замены по таблице s-блоков
-                    int[] blocks_4_bits = new int[8];
-                    for(int m = 0; m < blocks_4_bits.Length; m++)
-                    {
-                        for(int n = 0; n < 4; n++)
-                        {
-                            if(junior_int[m * 4 + n] == 1)
-                            {
-                                // Тут 4-х битное число преобразуется в десятичное
-                                blocks_4_bits[m] += Convert.ToInt32(Math.Pow(Convert.ToDouble(2), Convert.ToDouble(3 - n)));
-                            }
-                        }
+                    // Шаг 2 - разбиение младшей части на блоки по 4 бита с целью замены по таблице s-блоков
+                    junior_int = Four_Bit_Replace(junior_int);
 
-                        // Поиск по таблице и замена
-                        for (int x = 0; x < 16; x++)
-                        {
-                            if (blocks_4_bits[m] == x)
-                            {
-                                blocks_4_bits[m] = s_blocks[7 - m, x];
-                                break;
-                            }
-                        }
+                    // Шаг 3 - циклический сдвиг влево на 11 бит
+                    junior_int = Shift_Binary_Array(junior_int);
 
-                        //преобразуем числа обратно в биты
-                        string binary_block = Convert.ToString(blocks_4_bits[m], 2);
-                        while (binary_block.Length < 4)
-                        {
-                            // Делаем все значени 4-х битными
-                            binary_block = binary_block.Insert(0, "0");
-                        }
+                    // Шаг 4 - Сложение младшей половины со старшей по модулю 2 (исключающее ИЛИ)
+                    junior_int = Xor_Int_Arrays(junior_int, senior_int);
 
-                        // В соответствии со значениями из обработанной строки делаем соответствующие замены в int-массиве
-                        for (int x = 0; x < binary_block.Length; x++)
-                        {
-                            if (binary_block[x].ToString() == "0")
-                            {
-                                junior_int[m * 4 + x] = 0;
-                            }
-                            else if (binary_block[x].ToString() == "1")
-                            {
-                                junior_int[m * 4 + x] = 1;
-                            }
-                        }
-                    }
-
-                    ////Шаг 3////////////////////////////////////////////////////// 
-                    ////Циклический сдвиг на 11 бит влево
-                    string shifted_junior = "";
-                    for (int m = 0; m <junior_int.Length; m++)
-                    {
-                        shifted_junior += junior_int[(m + 11) % junior_int.Length];
-                    }
-                    for (int m = 0; m < junior_int.Length; m++)
-                    {
-                        if(shifted_junior[m].ToString() == "0")
-                        {
-                            junior_int[m] = 0;
-                        }
-                        else
-                        {
-                            junior_int[m] = 1;
-                        }
-                    }
-                    ////Шаг 4////////////////////////////////////////////////////// 
-                    ////Сложение младшей половины со старшей по модулю 2 (исключающее ИЛИ)
-                    for (int m = 0; m < junior_int.Length; m++)
-                    {
-                        if (junior_int[m] == senior_int[m])
-                        {
-                            junior_int[m] = 0;
-                        }
-                        else
-                        {
-                            junior_int[m] = 1;
-                        }
-                    }
-                    ////Шаг 5////////////////////////////////////////////////////// 
-                    ////Смена блоков местами
+                    // Шаг 5 - Смена блоков местами
                     if (j == 31) // 32-й райнд. Новый младший блок становится старшим, старый младший остается и становится вместо нового младшего
                     {
                         junior_int.CopyTo(senior_int, 0);
                         junior_int_old.CopyTo(junior_int, 0);
-                        
+
                     }
                     else // 0-31-й раунд. Старый младший становится старшим, новый младший становится старым младшим
                     {
@@ -372,7 +258,6 @@ namespace KMZI
                         senior_bits[m] = false;
                     }
                 }
-                // Конец раунда. Меняем местами старший и младший разряды
 
                 senior_bits.CopyTo(outFile, i);
                 junior_bits.CopyTo(outFile, i + 4);
@@ -406,193 +291,394 @@ namespace KMZI
         // Алгоритм шифрования в режиме гаммирования с обратной связью
         private void Perform_Gamma_With_Back_Connection()
         {
-            // Заглушка. Потом убрать!
-            MessageBox.Show("Данный режим ещё не реализован, так что можете переключиться на другой режим, " +
-                            "ну или посидеть тут с пустыми окошками... Дело ваше.", "Внимание!", 
-                            MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-        }
+            if (!Check_KeyLength())
+                return;
+            
+            // проверка корректности синхропосылки
+            if (!Check_SynchroBox_Length())
+                return;
 
-        // Кнопка "Открыть" из меню
-        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Open_File();
-        }
-
-        // Кнопка "Открыть..." из groupBox
-        private void button5_Click(object sender, EventArgs e)
-        {
-            Open_File();
-        }
-
-        // Кнопка "Сохранить" из меню
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
-        {    
-            Save_File();
-        }
-
-        // Кнопка "Сохранить..." из groupBox
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Save_File();
-        }
-
-        // Кнопка "Выход" из меню
-        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        // Кнопка "Очистить" для поля ввода
-        private void inBox_Clear_Click(object sender, EventArgs e)
-        {
-            inFile = null;
-            inBox.Clear();
-            is_text_from_file = false;
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
-        }
-
-        // Кнопка "Очистить" для поля вывода
-        private void button4_Click(object sender, EventArgs e)
-        {
-            outBox.Clear();
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
-        }
-
-        // Кнопка "Очистить все поля"
-        private void clear_all_Click(object sender, EventArgs e)
-        {
-            // Если хоть в одном поле остался текст - то нужно предупредить, что данные будут утеряны 
-            if (keyBox.TextLength > 0 || outBox.TextLength > 0 || inBox.TextLength > 0)
+            // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
+            // и его необходимо заполнить данными из поля ввода
+            if (is_text_from_file == false || inFile == null)
             {
-                var result = MessageBox.Show("Вы уверены, что хотите очистить все поля?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                inFile = Encoding.Default.GetBytes(inBox.Text);
+            }
+
+            outFile = new byte[inFile.Length];
+
+            byte[] synchro_package = Encoding.Default.GetBytes(synchroBox.Text);
+            byte[] text_byte = inFile;
+
+            byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text); // Переводим текст и ключ в байты
+
+            var key_bit = new BitArray(key_byte); // Переводим байтовые значения текста и ключа в биты
+
+            int[,] binary_key = new int[8, 32]; // массив для двоичного представления ключа
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 32; j++)
                 {
-                    inFile = null;
-                    inBox.Clear();
-                    outBox.Clear();
-                    keyBox.Clear();
-                    is_text_from_file = false;
-                    progressBar1.Visible = false;
-                    progressBar1.Value = 0;
-                }
-            }
-            else
-            {
-                inFile = null;
-                inBox.Clear();
-                outBox.Clear();
-                keyBox.Clear();
-                is_text_from_file = false;
-                progressBar1.Visible = false;
-                progressBar1.Value = 0;
-            }
-        }
-
-        // Кнопка "Закрыть"
-        private void close_Click(object sender, EventArgs e)
-        {
-            // Если в полях остался текст - нужно предупредить о потере данных при закрытии окна
-            if (keyBox.TextLength > 0 || outBox.TextLength > 0 || inBox.TextLength > 0)
-            {
-                var result = MessageBox.Show("Вы уверены, что хотите закрыть форму? Несохраненные данные будут потеряны.", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    this.Close();
-                }
-            }
-            else
-            {
-                this.Close();
-            }
-        }
-
-        // Функция для открытия файла
-        private void Open_File()
-        {
-            try
-            {
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                
-                    is_text_from_file = true;
-                    inFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
-                    progressBar1.Visible = false;
-                    progressBar1.Value = 0;
-
-                    // Если объем файла превышает 400 Мб, то будет ошибка (число в байтах)
-                    if (inFile.Length > 419430400)
+                    if (key_bit.Get(index))
                     {
-                        MessageBox.Show("Превышен допустимый размер файла.\n  Размер открываемого файла не должен превышать 400 Мб", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-                        inFile = null;
-                        return;
+                        binary_key[i, j] = 1;
+                    }
+                    index++;
+                }
+            }
+            var text_bit = new BitArray(text_byte);
+            var synchro_bits = new BitArray(synchro_package);
+
+            index = 0;
+
+            int[] synchro_binary = new int[64];
+            for (int m = 0; m < 64; m++)
+            {
+                if (synchro_bits.Get(m))
+                {
+                    synchro_binary[m] = 1;
+                }
+            }
+
+            ProgressBar_Default();
+
+            // Идём по блокам текста
+            for (int i = 0; i < inFile.Length; i += 8)
+            {
+                // Выделяет место под старшую и младшую половину блока
+                byte[] temp_senior_byte = new byte[4];
+                byte[] temp_junior_byte = new byte[4];
+
+                // Копируем блок текста в созданные половины, разбив его на старшую и младшую половины
+                if (i == 0)
+                {
+                    Array.Copy(synchro_package, 0, temp_senior_byte, 0, 4);
+                    Array.Copy(synchro_package, 4, temp_junior_byte, 0, 4);
+
+                }
+                else
+                {
+                    if (radioButton1.Checked)
+                    {
+                        Array.Copy(outFile, i - 8, temp_senior_byte, 0, 4);
+                        Array.Copy(outFile, i - 4, temp_junior_byte, 0, 4);
                     }
                     else
                     {
-                        // Если нужен подробный вывод, то текст будет представлен в виде набора байтов
-                        if (is_text_detailed)
+                        Array.Copy(inFile, i - 8, temp_senior_byte, 0, 4);
+                        Array.Copy(inFile, i - 4, temp_junior_byte, 0, 4);
+                    }
+                }
+
+                // Преобразуем половины блока в массивы битов
+                var senior_bits = new BitArray(temp_senior_byte);
+                var junior_bits = new BitArray(temp_junior_byte);
+
+                // Создаем численные массивы, поскольку массивы битов представлены в формате bool - а я хочу числа
+                /* Стоит присмотреться. Возможно проще не создавать численные форматы, а работать с тем, что есть*/
+                int[] senior_int = new int[32];
+                int[] junior_int = new int[32];
+                int[] junior_int_old = new int[32];
+
+                int[] result = new int[32];
+
+                // Копируем значения массива битов в численные массивы
+                for (int m = 0; m < 32; m++)
+                {
+                    if (senior_bits.Get(m))
+                    {
+                        senior_int[m] = 1;
+                    }
+                    if (junior_bits.Get(m))
+                    {
+                        junior_int[m] = 1;
+                        junior_int_old[m] = 1;
+                    }
+                }
+
+
+                // Начинаем раунды преобразования
+                index = 0;
+                for (int j = 0; j < 32; j++)
+                {
+
+                    junior_int = Perform_Sum_By_32(junior_int, binary_key);
+                    index = (index + 1) % 8; // меняем блок накладываемого ключа
+
+                    // При шифровании ключ инвертируется на последние 8 раундов
+                    if (radioButton1.Checked)
+                    {
+                        if (j == 23)
                         {
-                            inBox.Text = BitConverter.ToString(inFile);
+                            binary_key = Invert_key_GOST(binary_key);
                         }
-                        else
+                    }
+                    // При расшифровании ключ инвертируется после первых 8-ми раундов
+                    else if (radioButton2.Checked)
+                    {
+                        if (j == 7)
                         {
-                            inBox.Text = Encoding.Default.GetString(inFile);
+                            binary_key = Invert_key_GOST(binary_key);
                         }
+                    }
+
+                    // Шаг 2 - разбиение младшей части на блоки по 4 бита с целью замены по таблице s-блоков
+                    junior_int = Four_Bit_Replace(junior_int);
+
+                    // Шаг 3 - циклический сдвиг влево на 11 бит
+                    junior_int = Shift_Binary_Array(junior_int);
+
+                    //junior_int = Xor_Int_Arrays(junior_int, senior_int);
+                    // Смена блоков местами
+                    if (j == 31) // 32-й райнд. Новый младший блок становится старшим, старый младший остается и становится вместо нового младшего
+                    {
+                        junior_int.CopyTo(senior_int, 0);
+                        junior_int_old.CopyTo(junior_int, 0);
+
+                    }
+                    else // 0-31-й раунд. Старый младший становится старшим, новый младший становится старым младшим
+                    {
+                        junior_int_old.CopyTo(senior_int, 0);
+                        junior_int.CopyTo(junior_int_old, 0);
+                    }
+                }
+
+                // переносим значения из int в BitArray
+                for (int m = 0; m < junior_int.Length; m++)
+                {
+                    if (junior_int[m] == 1)
+                    {
+                        junior_bits[m] = true;
+                    }
+                    else
+                    {
+                        junior_bits[m] = false;
+                    }
+
+                    if (senior_int[m] == 1)
+                    {
+                        senior_bits[m] = true;
+                    }
+                    else
+                    {
+                        senior_bits[m] = false;
+                    }
+                }
+
+                byte[] gamma = new byte[8];
+                senior_bits.CopyTo(gamma, 0);
+                junior_bits.CopyTo(gamma, 4);
+                byte[] temp_text;
+                if (i + 8 > inFile.Length)
+                {
+                    temp_text = new byte[inFile.Length - i];
+                }
+                else
+                {
+                    temp_text = new byte[8];
+                }
+
+                if (i == 0)
+                {
+                    Array.Copy(inFile, i, temp_text, 0, temp_text.Length);
+                }
+                else
+                {
+                    Array.Copy(inFile, i, temp_text, 0, temp_text.Length);
+                }
+
+                var temp_bits = new BitArray(temp_text);
+                var gamma_bits = new BitArray(gamma);
+
+                int[] temp_int = new int[temp_bits.Length];
+                int[] gamma_int = new int[gamma_bits.Length];
+
+                for (int m = 0; m < temp_int.Length; m++)
+                {
+                    if (temp_bits.Get(m))
+                    {
+                        temp_int[m] = 1;
+                    }
+                    if (gamma_bits.Get(m))
+                    {
+                        gamma_int[m] = 1;
+                    }
+                }
+
+                temp_int = Xor_Int_Arrays(temp_int, gamma_int);
+                for (int m = 0; m < temp_bits.Length; m++)
+                {
+                    if (temp_int[m] == 1)
+                    {
+                        temp_bits[m] = true;
+                    }
+                    else
+                    {
+                        temp_bits[m] = false;
+                    }
+
+                }
+                temp_bits.CopyTo(outFile, i);
+
+                progressBar1.PerformStep();
+            }
+
+            if (is_text_detailed)
+            {
+                outBox.Text = BitConverter.ToString(outFile);
+            }
+            else
+            {
+                outBox.Text = Encoding.Default.GetString(outFile);
+            }
+        }
+
+        // Побайтовое суммирование 32-битных чисел по модулю 2^32
+        private int[] Perform_Sum_By_32(int[] a, int[,] b)
+        {
+            int remainder = 0;
+
+            for (int m = 31; m >= 0; m--)
+            {
+                if (a[m] == 0 && b[index, m] == 0 && remainder == 0)
+                {
+                    a[m] = 0;
+                    remainder = 0;
+                }
+                else if ((a[m] == 0 && b[index, m] == 0 && remainder == 1) ||
+                         (a[m] == 0 && b[index, m] == 1 && remainder == 0) ||
+                         (a[m] == 1 && b[index, m] == 0 && remainder == 0))
+                {
+                    a[m] = 1;
+                    remainder = 0;
+                }
+                else if ((a[m] == 0 && b[index, m] == 1 && remainder == 1) ||
+                         (a[m] == 1 && b[index, m] == 0 && remainder == 1) ||
+                         (a[m] == 1 && b[index, m] == 1 && remainder == 0))
+                {
+                    a[m] = 0;
+                    remainder = 1;
+                }
+                else if (a[m] == 1 && b[index, m] == 1 && remainder == 1)
+                {
+                    a[m] = 1;
+                    remainder = 1;
+                }
+            }
+
+            return a;
+        }
+
+        // Построчная инверсия ключа специально для ГОСТа
+        private int[,] Invert_key_GOST(int[,] key)
+        {
+            for (int m = 0; m < key.GetLength(0) / 2; m++)
+            {
+                for (int n = 0; n < key.GetLength(1); n++)
+                {
+                    int k_temp = key[m, n];
+                    key[m, n] = key[7 - m, n];
+                    key[7 - m, n] = k_temp;
+                }
+            }
+            return key;
+        }
+
+        // Замена байтов 4-х битных блоков с использзованием s-блоков
+        private int[] Four_Bit_Replace(int[] block)
+        {
+            int[] blocks_4_bits = new int[8];
+            for (int m = 0; m < blocks_4_bits.Length; m++)
+            {
+                for (int n = 0; n < 4; n++)
+                {
+                    if (block[m * 4 + n] == 1)
+                    {
+                        // Тут 4-х битное число преобразуется в десятичное
+                        blocks_4_bits[m] += Convert.ToInt32(Math.Pow(Convert.ToDouble(2), Convert.ToDouble(3 - n)));
+                    }
+                }
+
+                // Поиск по таблице и замена
+                for (int x = 0; x < 16; x++)
+                {
+                    if (blocks_4_bits[m] == x)
+                    {
+                        blocks_4_bits[m] = s_blocks[7 - m, x];
+                        break;
+                    }
+                }
+
+                //преобразуем числа обратно в биты
+                string binary_block = Convert.ToString(blocks_4_bits[m], 2);
+                while (binary_block.Length < 4)
+                {
+                    // Делаем все значени 4-х битными
+                    binary_block = binary_block.Insert(0, "0");
+                }
+
+                // В соответствии со значениями из обработанной строки делаем соответствующие замены в int-массиве
+                for (int x = 0; x < binary_block.Length; x++)
+                {
+                    if (binary_block[x].ToString() == "0")
+                    {
+                        block[m * 4 + x] = 0;
+                    }
+                    else if (binary_block[x].ToString() == "1")
+                    {
+                        block[m * 4 + x] = 1;
                     }
                 }
             }
-            catch
-            {
-                MessageBox.Show("Превышен допустимый размер файла.\n  Размер открываемого файла не должен превышать 400 Мб", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-            }
+
+            return block;
         }
 
-        // Функция для сохранения файла
-        private void Save_File()
+        // Циклический сдвиг бинарного массива
+        private int[] Shift_Binary_Array(int[] block)
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            string shifted_block = "";
+            for (int m = 0; m < block.Length; m++)
             {
-                System.IO.File.WriteAllBytes(saveFileDialog1.FileName, outFile);
+                shifted_block += block[(m + 11) % block.Length];
             }
+            for (int m = 0; m < block.Length; m++)
+            {
+                if (shifted_block[m].ToString() == "0")
+                {
+                    block[m] = 0;
+                }
+                else
+                {
+                    block[m] = 1;
+                }
+            }
+
+            return block;
         }
 
-        // Проверка ключа: длина должна быть 32 символа (256 бит)
-        private void keyBox_TextChanged(object sender, EventArgs e)
+        // XOR для бинарных массивов, представленных в формате int
+        private int[] Xor_Int_Arrays(int[] a, int[] b)
         {
-            label1.Text = keyBox.TextLength.ToString(); // Над полем ввода ключа отображается длина введенного ключа     
-            if (comboBox1.SelectedIndex == 0)           // В зависимости от длины ключа меняется цветовая индикация и состояние кнопки
+            for (int m = 0; m < a.Length; m++)
             {
-                if (keyBox.TextLength == 32)
+                if (a[m] == b[m])
                 {
-                    label1.BackColor = Color.LimeGreen;
-                    label1.ForeColor = Color.Black;
-                    button6.Enabled = true;
+                    a[m] = 0;
                 }
-                else if (keyBox.TextLength > 32)
+                else
                 {
-                    label1.BackColor = Color.Gold;
-                    label1.ForeColor = Color.Black;
-                    button6.Enabled = true;
-                }
-                else if (keyBox.TextLength > 0 && keyBox.TextLength < 32)
-                {
-                    label1.BackColor = Color.OrangeRed;
-                    label1.ForeColor = Color.White;
-                    button6.Enabled = true;
-                }
-                else if (keyBox.TextLength == 0)
-                {
-                    label1.BackColor = Color.OrangeRed;
-                    label1.ForeColor = Color.White;
-                    button6.Enabled = false;
+                    a[m] = 1;
                 }
             }
+
+            return a;
         }
 
         // Кнопка переноса текста из окна результата в окно ввода
         private void button1_Click(object sender, EventArgs e)
-        {   
+
+        {
             // Главное - перенести сформировавшийся масив байтов
             if (inFile != null)
             {
@@ -611,61 +697,6 @@ namespace KMZI
                 }
             }
         }
-
-        // Переключатель режима шифрования
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (comboBox1.SelectedIndex)
-            {
-                case (0):
-                    groupBox2.Enabled = true;
-                    label1.Visible = true;
-                    label2.Visible = true;
-                    progressBar1.Value = 0;
-                    progressBar1.Visible = false;
-                    break;
-                case (1):
-                    groupBox2.Enabled = true;
-                    break;
-                default:
-                    groupBox2.Enabled = false;
-                    break;
-            }
-        }
-
-        // Кнопка "Шифрование" - активирует оставшиеся groupBox
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBox3.Enabled = true;
-            groupBox4.Enabled = true;
-            groupBox5.Enabled = true;
-            checkBox1.Enabled = true;
-        }
-
-        // Кнопка "Расшифрование" - активирует оставшиеся groupBox
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBox3.Enabled = true;
-            groupBox4.Enabled = true;
-            groupBox5.Enabled = true;
-            checkBox1.Enabled = true;
-        }
-
-        // Кнопка "Настройки" - вызывает форму с настройками. Сейчас  не работает
-        private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            if (options == null || options.IsDisposed)
-            {
-                options = new GOST_Options();
-                options.Show();
-            }
-            else
-            {
-                options.Activate();
-            }
-        }
-
         // Функция проверки и исправления ключа
         private bool Check_KeyLength()
         {
@@ -716,16 +747,360 @@ namespace KMZI
                 }
             }
 
-            // Ключ нормальной длины, так что true
             return true;
         }
 
-        // Кнопка "Очистить поле" для keyBox
-        private void button4_Click_1(object sender, EventArgs e)
+        // Функция проверки и исправления синхропосылки
+        private bool Check_SynchroBox_Length()
         {
-            keyBox.Clear();
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
+            // Если ключ недостаточной длины - дополняем его зацикливанием
+            if (synchroBox.TextLength < 8)
+            {
+                var result = MessageBox.Show("Недостаточная длина синхропосылки!\n Дополнить синхропосылку при помощи закикливания?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    int count = 0;
+                    int length = synchroBox.TextLength;
+
+                    while (synchroBox.TextLength < 8)
+                    {
+                        synchroBox.Text += synchroBox.Text[count % length];
+                        count++;
+                    }
+
+                    return true;
+                }
+                else if (result == DialogResult.No)
+                {
+                    return false;
+                }
+            }
+            else if (synchroBox.TextLength > 8) // Если ключ избыточной длины - обрезаем его
+            {
+                var result = MessageBox.Show("Избыточная длина синхропосылки!\n Сократить синхропосылку?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    string temp = "";
+                    for (int i = 0; i < 8; i++)
+                    {
+                        temp += synchroBox.Text[i];
+                    }
+                    synchroBox.Clear();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        synchroBox.Text += temp[i];
+                    }
+
+                    return true;
+                }
+                else if (result == DialogResult.No)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Кнопка "Открыть" из меню
+        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Open_File();
+        }
+
+        // Кнопка "Открыть..." из groupBox
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Open_File();
+        }
+
+        // Кнопка "Сохранить" из меню
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {    
+            Save_File();
+        }
+
+        // Кнопка "Сохранить..." из groupBox
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Save_File();
+        }
+
+        // Функция для открытия файла
+        private void Open_File()
+        {
+            try
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+
+                    is_text_from_file = true;
+                    inFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                    ProgressBar_Reset();
+
+                    // Если объем файла превышает 400 Мб, то будет ошибка (число в байтах)
+                    if (inFile.Length > 419430400)
+                    {
+                        MessageBox.Show("Превышен допустимый размер файла.\n  Размер открываемого файла не должен превышать 400 Мб", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                        inFile = null;
+                        return;
+                    }
+                    else
+                    {
+                        // Если нужен подробный вывод, то текст будет представлен в виде набора байтов
+                        if (is_text_detailed)
+                        {
+                            inBox.Text = BitConverter.ToString(inFile);
+                        }
+                        else
+                        {
+                            inBox.Text = Encoding.Default.GetString(inFile);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Превышен допустимый размер файла.\n  Размер открываемого файла не должен превышать 400 Мб", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            }
+        }
+
+        // Функция для сохранения файла
+        private void Save_File()
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllBytes(saveFileDialog1.FileName, outFile);
+            }
+        }
+
+        // Кнопка "Очистить" для поля ввода
+        private void inBox_Clear_Click(object sender, EventArgs e)
+        {
+            inFile = null;
+            inBox.Clear();
+            is_text_from_file = false;
+            ProgressBar_Reset();
+        }
+
+        // Кнопка "Очистить" для поля вывода
+        private void button4_Click(object sender, EventArgs e)
+        {
+            outBox.Clear();
+            ProgressBar_Reset();
+        }
+
+        // Кнопка "Очистить все поля"
+        private void clear_all_Click(object sender, EventArgs e)
+        {
+            // Если хоть в одном поле остался текст - то нужно предупредить, что данные будут утеряны 
+            if (keyBox.TextLength > 0 || outBox.TextLength > 0 || inBox.TextLength > 0)
+            {
+                var result = MessageBox.Show("Вы уверены, что хотите очистить все поля?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    Clear_All_Fields();
+                    is_text_from_file = false;
+                    ProgressBar_Reset();
+                    //label1.Visible = false;
+                    //label2.Visible = false;
+                    //label3.Visible = false;
+                    RadioButton_Reset();
+                    //label4.Visible = false;
+                }
+            }
+            else
+            {
+                Clear_All_Fields();              
+                is_text_from_file = false;
+                ProgressBar_Reset();
+                //label1.Visible = false;
+                RadioButton_Reset();
+                //label2.Visible = false;
+                //label3.Visible = false;
+                //label4.Visible = false;
+            }
+
+        }
+
+        // Кнопка "Закрыть"
+        private void close_Click(object sender, EventArgs e)
+        {
+            // Если в полях остался текст - нужно предупредить о потере данных при закрытии окна
+            if (keyBox.TextLength > 0 || outBox.TextLength > 0 || inBox.TextLength > 0)
+            {
+                var result = MessageBox.Show("Вы уверены, что хотите закрыть форму? Несохраненные данные будут потеряны.", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+            }
+            else
+            {
+                this.Close();
+            }
+        }
+
+        // Кнопка "Выход" из меню
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        // Цветовая индикация и активация кнопки в зависимости от длины ключа
+        private void keyBox_TextChanged(object sender, EventArgs e)
+        {
+            label1.Text = keyBox.TextLength.ToString(); // Над полем ввода ключа отображается длина введенного ключа     
+                                                        // В зависимости от длины ключа меняется цветовая индикация и состояние кнопки
+            if (comboBox1.SelectedIndex == 0)
+            {
+                if (keyBox.TextLength == 32)
+                {
+                    label1.BackColor = Color.LimeGreen;
+                    label1.ForeColor = Color.Black;
+                    button6.Enabled = true;
+                }
+                else if (keyBox.TextLength > 32)
+                {
+                    label1.BackColor = Color.Gold;
+                    label1.ForeColor = Color.Black;
+                    button6.Enabled = true;
+                }
+                else if (keyBox.TextLength > 0 && keyBox.TextLength < 32)
+                {
+                    label1.BackColor = Color.OrangeRed;
+                    label1.ForeColor = Color.White;
+                    button6.Enabled = true;
+                }
+                else if (keyBox.TextLength == 0)
+                {
+                    label1.BackColor = Color.OrangeRed;
+                    label1.ForeColor = Color.White;
+                    button6.Enabled = false;
+                }
+            }
+        }
+
+        // Цветовая индикация и активация кнопки в зависимости от длины синхропосылки
+        private void synchroBox_TextChanged(object sender, EventArgs e)
+        {
+            label4.Text = synchroBox.TextLength.ToString(); // Над полем ввода ключа отображается длина введенного ключа     
+
+            if (comboBox1.SelectedIndex == 1)
+            {
+                if (synchroBox.TextLength == 8)
+                {
+                    label4.BackColor = Color.LimeGreen;
+                    label4.ForeColor = Color.Black;
+                    button6.Enabled = true;
+                }
+                else if (synchroBox.TextLength > 8)
+                {
+                    label4.BackColor = Color.Gold;
+                    label4.ForeColor = Color.Black;
+                    button6.Enabled = true;
+                }
+                else if (synchroBox.TextLength > 0 && synchroBox.TextLength < 8)
+                {
+                    label4.BackColor = Color.OrangeRed;
+                    label4.ForeColor = Color.White;
+                    button6.Enabled = true;
+                }
+                else if (synchroBox.TextLength == 0)
+                {
+                    label4.BackColor = Color.OrangeRed;
+                    label4.ForeColor = Color.White;
+                    button6.Enabled = false;
+                }
+            }
+        }
+
+        // Переключатель режима шифрования
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBox1.SelectedIndex)
+            {
+                case (0):
+                    Clear_All_Fields();
+                    groupBox2.Enabled = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = false;
+                    label4.Visible = false;
+                    ProgressBar_Reset();
+                    is_gamming = false;
+                    RadioButton_Reset();
+                    Set_Fields_State(false);
+                    break;
+                case (1):
+                    Clear_All_Fields();
+                    RadioButton_Reset();
+                    label1.Visible = false;
+                    label2.Visible = false;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    groupBox2.Enabled = true;
+                    is_gamming = true;
+                    Set_Fields_State(false);
+                    break;
+                default:
+                    RadioButton_Reset();
+                    groupBox2.Enabled = false;
+                    is_gamming = false;
+                    Set_Fields_State(false);
+                    label1.Visible = false;
+                    label2.Visible = false;
+                    label3.Visible = false;
+                    label4.Visible = false;
+                    break;
+            }
+        }
+
+        // Кнопка "Шифрование" - активирует оставшиеся groupBox
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            Set_Fields_State(true);
+            if (is_gamming)
+            {
+                synchroBox.Enabled = true;
+                keyBox.Enabled = false;
+            }
+            else
+            {
+                synchroBox.Enabled = false;
+                keyBox.Enabled = true;
+            }
+    }
+
+        // Кнопка "Расшифрование" - активирует оставшиеся groupBox
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            Set_Fields_State(true);
+            if (is_gamming)
+            {
+                synchroBox.Enabled = true;
+                keyBox.Enabled = false;
+            }
+            else
+            {
+                synchroBox.Enabled = false;
+                keyBox.Enabled = true;
+            }
+        }
+
+        // Кнопка "Настройки" - вызывает форму с настройками. Сейчас  не работает
+        private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (options == null || options.IsDisposed)
+            {
+                options = new GOST_Options();
+                options.Show();
+            }
+            else
+            {
+                options.Activate();
+            }
         }
 
         // Галочка "Подробный текст"
@@ -748,6 +1123,113 @@ namespace KMZI
             
             t.SetToolTip(checkBox1, "Отображение считываемых файлов и результата шифрования в виде множества байтов. " +
                                     "\nВключение данной функции может негативно сказаться на быстродействии системы.");
+        }
+
+        // Очистка всех полей
+        private void Clear_All_Fields()
+        {
+            keyBox.Clear();
+            synchroBox.Clear();
+            inFile = null;
+            inBox.Clear();
+            outBox.Clear();
+        }
+
+        // Сбросить выделение с радиальных кнопок
+        private void RadioButton_Reset()
+        {
+            radioButton1.Checked = false;
+            radioButton2.Checked = false;
+        }
+
+        // Групповая установка состояний полей ввода
+        private void Set_Fields_State(bool state)
+        {
+            groupBox3.Enabled = state;
+            groupBox4.Enabled = state;
+            groupBox5.Enabled = state;
+            checkBox1.Enabled = state;
+        }
+
+        // Первоначальная настройка ProgressBar'а
+        private void ProgressBar_Default()
+        {
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = inFile.Length / 8;
+            progressBar1.Step = 1;
+            progressBar1.Value = 0;
+            progressBar1.Visible = true;
+        }
+
+        // Сброс ProgressBar'а
+        private void ProgressBar_Reset()
+        {
+            progressBar1.Value = 0;
+            progressBar1.Visible = false;
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                keyBox.Clear();
+                int count = 0;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    byte[] key = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                    string k = Encoding.UTF8.GetString(key);
+                    while (keyBox.TextLength < 32)
+                    {
+                        keyBox.Text += k[count % k.Length];
+                        count++;
+                    }
+                    k = "";
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Не удалось открыть файл!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(saveFileDialog1.FileName, keyBox.Text);
+            }
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                synchroBox.Clear();
+                int count = 0;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    byte[] package = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                    string k = Encoding.UTF8.GetString(package);
+                    while (synchroBox.TextLength < 8)
+                    {
+                        synchroBox.Text += k[count % k.Length];
+                        count++;
+                    }
+                    k = "";
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Не удалось открыть файл!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(saveFileDialog1.FileName, synchroBox.Text);
+            }
         }
     }
 }

@@ -26,3 +26,4 @@ D:\Documents & projects\Учёба\4 курс\10 семестр\Криптогр
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Release\KMZI.Vernam.resources
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Release\KMZI.DES.resources
 D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Release\KMZI.GOST.resources
+D:\Documents & projects\Учёба\4 курс\10 семестр\Криптографические методы защиты информации\Лабы\1\KMZI\obj\Release\KMZI.GOST_Options.resources
