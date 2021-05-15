@@ -54,12 +54,7 @@ namespace KMZI
                 tmpIn = Encoding.Default.GetBytes(textBox1.Text);               
             }
 
-            text_byte = tmpIn;
-            //else
-            //{
-            //    text_byte = tmpIn;
-            //    //tmpIn = null;
-            //}
+            text_byte = tmpIn; // Перегоняем проитанные байты в массив для дальнейшей работы
 
             // Генерируем случайную числовую последовательность
             int[] key = generate_key(Convert.ToInt32(startKeyBox.Text.ToString()), text_byte.Length);
@@ -81,11 +76,14 @@ namespace KMZI
             var key_binary = new BitArray(key_byte);
             var text_binary = new BitArray(text_byte);
 
+            // Текст XOR-ится с ключом
             text_binary.Xor(key_binary);
 
+            // Результат XOR-а переносится в массив
             tmpOut = new byte[text_byte.Length];
             text_binary.CopyTo(tmpOut, 0);
 
+            // Вывод
             if (is_text_detailed)
             {
                 textBox2.Text = BitConverter.ToString(tmpOut);
@@ -94,7 +92,6 @@ namespace KMZI
             {
                 textBox2.Text = Encoding.Default.GetString(tmpOut);
             }
-            //textBox2.Text = Encoding.Default.GetString(tmpOut);
         }
 
         // Кнопка "Открыть файл"
@@ -111,10 +108,7 @@ namespace KMZI
 
             is_text_from_file = true;
             tmpIn = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
-            //inBox.Text = Encoding.Default.GetString(inFile);
-           // progressBar1.Visible = false;
-           // progressBar1.Value = 0;
-            //inBox.Text = BitConverter.ToString(inFile);
+
             if (is_text_detailed)
             {
                 textBox1.Text = BitConverter.ToString(tmpIn);
@@ -122,8 +116,6 @@ namespace KMZI
             else
             {
                 textBox1.Text = Encoding.Default.GetString(tmpIn);
-                //tmpIn
-                //textBox1.Text = BitConverter.ToString(tmpIn);
             }
         }
 
@@ -221,21 +213,9 @@ namespace KMZI
                 startKeyBox.Clear();
                 startKeyBox.Enabled = false;
             }
-        }
+        }   
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if (tmpIn != null /*&& tmpOut != null*/)
-            {
-                //byte[] temp = new byte[inFile.Length];
-                //inFile.CopyTo(temp, 0);
-                tmpOut.CopyTo(tmpIn, 0);
-                //temp.CopyTo(outFile, 0);
-                textBox1.Clear();
-                textBox2.Text = textBox1.Text;
-            }
-        }
-
+        // Параметр для вывода подробного текста в случае необходимости
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -245,6 +225,23 @@ namespace KMZI
             else
             {
                 is_text_detailed = false;
+            }
+        }
+
+        // Кнопка переноса текста из поля вывода в поле ввода
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (tmpOut != null)
+            {
+                tmpOut.CopyTo(tmpIn, 0);
+                if (is_text_detailed)
+                {
+                    textBox1.Text = BitConverter.ToString(tmpIn);
+                }
+                else
+                {
+                    textBox1.Text = Encoding.Default.GetString(tmpIn);
+                }
             }
         }
     }

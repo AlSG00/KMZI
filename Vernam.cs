@@ -60,9 +60,10 @@ namespace KMZI
             symbol_pos = new int[textBox1.TextLength];
             text_byte = new byte[textBox1.TextLength];
 
+            // Преобразуем символы в позиции в алфавите
             for (int i = 0; i < textBox1.TextLength; i++)
             {
-                if (alphabet.Contains(textBox1.Text[i])) // Преобразуем строку в числа
+                if (alphabet.Contains(textBox1.Text[i])) 
                 {
                     text_byte[i] = Convert.ToByte(Array.IndexOf(alphabet, textBox1.Text[i]));
                 }
@@ -77,7 +78,7 @@ namespace KMZI
             // Преобразуем ранее полученную числовую строку в двоичный код
             text_binary = convert_to_binary(textBox1.TextLength, text_byte);
 
-            // Циклом докопировали код до нужной длины
+            // Циклом докопировали ключ до нужной длины
             while (keyBoxProcessed.TextLength < textBox1.TextLength)
             {
                 keyBoxProcessed.Text += keyBox.Text[count % keyBox.TextLength];
@@ -85,8 +86,7 @@ namespace KMZI
             }
             count = 0;
 
-
-            // Числовое преобразование ключа
+            // По аналогии с текстом меняем символы на числа в ключе
             for (int i = 0; i < textBox1.TextLength; i++)
             {
                 if (alphabet.Contains(keyBoxProcessed.Text[i]))
@@ -99,11 +99,11 @@ namespace KMZI
                 }
             }
 
-            // Преобразование ключа в двоичный код
+            // Преобразование ключ в двоичный код
             key_binary = convert_to_binary(keyBoxProcessed.TextLength, key_byte);
 
             // Шифрование текста
-            answer_binary = convert_xor(text_binary, key_binary);
+            answer_binary = convert_xor(text_binary, key_binary); // XOR-им текст с ключом
             for(int i = 0; i < answer_binary.Length; i++)
             {
                 binaryBox.Text += answer_binary[i];

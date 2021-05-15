@@ -29,12 +29,12 @@ namespace KMZI
                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                             '.', ',', '!', '?', '@', '#', '$', '%', ' '};
 
-        int[] symbol_pos;
-        char[] symbol;
+        int[] symbol_pos; // позиция в которой стоит необрабатываемый символ
+        char[] symbol; // для необрабатываемых символов, которые будут возвращены в текст
         decimal[,] key; //ключ в виде матрицы
         double[,] key_algebraic;//матрица алгебраических дополнений
         double[,] key_answer; //ключ для расшифрования
-        int[] _key; //ключ, но не матрица, а строка
+        //int[] _key; //ключ, но не матрица, а строка
         decimal[,] minor; // минор для нахождения обратной матрицы
         int count;
 
@@ -51,9 +51,10 @@ namespace KMZI
                 count++;
             }
             key = new decimal[count, count];
-            _key = new int[count * count];
+            int[] _key = new int[count * count];
 
-            while (textBox1.TextLength % count != 0) // Дополняем исходный текст до нужной длины
+            // Дополняем исходный текст до нужной длины
+            while (textBox1.TextLength % count != 0) 
             {
                 textBox1.Text += ' ';
             }
@@ -63,11 +64,13 @@ namespace KMZI
 
             count = 0;
 
+            // Дополняем слово-ключ до нужной длины
             for (int i = 0; i < key.Length; i++)
             {
-                keyBoxProcessed.Text += keyBox.Text[i % keyBox.TextLength]; // Дополняем слово-ключ до нужной длины
+                keyBoxProcessed.Text += keyBox.Text[i % keyBox.TextLength]; 
             }
 
+            // Меняем символы в ключе на их позиции в алфавите
             for (int i = 0; i < key.Length; i++)
             {
                 if (alphabet.Contains(keyBoxProcessed.Text[i]))
@@ -82,6 +85,7 @@ namespace KMZI
                 }
             }
             count = 0;
+            // Заполняем матрицу-ключ полученными позициями символов
             for (int i = 0; i < key.GetLength(0); i++)
             {
                 for (int j = 0; j < key.GetLength(1); j++)
@@ -91,7 +95,8 @@ namespace KMZI
                 }
             }
 
-            determinant = Determinant(key); // Вычисление определителя ключа. Он должен быть ненулевой
+            // Вычисление определителя ключа. Он должен быть ненулевой
+            determinant = Determinant(key); 
             if (determinant == 0)
             {
                 MessageBox.Show("Выберите другой ключ", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -116,20 +121,22 @@ namespace KMZI
             // Шифрование
             if (radioButton1.Checked == true)
             {
-
                 count = 0;
                 keyBoxProcessed.Clear();
                 key_algebraic = null;
                 key_answer = null;
-                _key = null;
+                //_key = null;
 
+                // Генерируем ключ
                 key = generate_key();
 
+                // Если ключ отсутствует, то программа дальше не работает
                 if(key == null)
                 {
                     return;
                 }
                 
+                // Преобразуем весь введенный текст в численные позиции алфавита
                 decimal[] text = new decimal[textBox1.TextLength];
                 for (int i = 0; i < textBox1.TextLength; i++)
                 {
@@ -170,7 +177,7 @@ namespace KMZI
                             text[i + j] = vector_ans[j]; // переносим шифротекст в поле вывода
                         }
                     }
-                    else // Если исходного текта не хватает на дополнение вектора
+                    else // Если исходного текста не хватает на дополнение вектора
                     {
                         vector = new decimal[key.GetLength(0)];
                         for (int j = i; j < textBox1.TextLength; j++)
@@ -226,7 +233,7 @@ namespace KMZI
                 {
                     count++;
                 }
-                decimal determinant_inversive = count;
+                decimal determinant_inversive = count; // обратное к определителю
                 count = 0;
 
                 // Стряпаем миноры
@@ -260,35 +267,33 @@ namespace KMZI
                                 }
                             }
                         }
-                        decimal test = Determinant(minor); // Алгебраическое дополнение
+                        decimal test = Determinant(minor); // Дополнительный минор (определитель минора)
                         while (test < 0)
                         {
                             test += mod;
                         }
 
-                        // Теперь сделаем алгебраическое дополнение
+                        // Теперь сделаем алгебраическое дополнение...
                         key_algebraic[i, j] = Convert.ToDouble(((Convert.ToDecimal(Math.Pow(-1, i + j)) * test)) % mod);
-                        while (key_algebraic[i, j] < 0)
+                        while (key_algebraic[i, j] < 0) //...и снова возьмем по модулю
                         {
                             key_algebraic[i, j] += mod;
                         }
-
-
                     }
                 }
                 /*закончили стряпать миноры-------------------------*/
 
-                key_algebraic = trans(key_algebraic); // Затранспонировали ключ
+                key_algebraic = trans(key_algebraic); // Затранспонировали ключ относительно главной диагонали
                 key_answer = new double[key.GetLength(0), key.GetLength(1)];
 
-                // Находим обратную матрицу. Она будет ключом дешифровки
+                // Находим обратную матрицу. Она будет ключом расшифровки
                 for (int i = 0; i < key.GetLength(0); i++)
                 {
                     for (int j = 0; j < key.GetLength(1); j++)
                     {
                         key_answer[i, j] = Convert.ToDouble(Convert.ToDecimal(key_algebraic[i, j]) * determinant_inversive % mod);
                     }
-                }
+                } // Получили матрицу для расшифровки
 
                 decimal[] text = new decimal[textBox1.TextLength];
                 for (int i = 0; i < textBox1.TextLength; i++)
@@ -305,6 +310,8 @@ namespace KMZI
 
                 count = 0;
 
+                /*Далее, как в шифровании, разбиваем текст на векторы 
+                 *и перемножаем на получившуюся обратную матрицу*/
                 for (int i = 0; i < textBox1.TextLength; i += key.GetLength(0))
                 {
                     vector_ans = new decimal[key.GetLength(0)];
@@ -356,6 +363,7 @@ namespace KMZI
                     }
                 }
 
+                // Численнные результаты расшифрования меняем на символьные
                 for (int i = 0; i < text.Length; i++)
                 {
                     if (symbol_pos[i] == 1)

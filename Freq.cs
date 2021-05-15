@@ -59,7 +59,7 @@ namespace KMZI
         char temp_ch;
 
         bool isRussian = false; // Является ли текст русскоязычным
-        bool textError = false; // Поддается ли текст обработке
+        bool textError = false; // Поддается ли текст обработке (есть ли в нем имволы хотя бы одного алфавита)
 
         // Первичная обработка текста
         private void button2_Click(object sender, EventArgs e)
@@ -70,10 +70,14 @@ namespace KMZI
             sampleBox.Clear();
             textBox2.Clear();
 
-            isRussian = check_language(textBox1.Text); // Смотрим, какой язык будет испоьлзоваться в дальнейшей работе
+            // Смотрим, какой язык будет использоваться в дальнейшей работе
+            isRussian = check_language(textBox1.Text); 
 
+            // Если текст поддается обработке...
             if (!textError)
             {
+                // ...то делаем настройку языка
+                /**/
                 language_setup(); // Исходя из функции выше, проводим первоначальную настройку
             }
             else
@@ -84,10 +88,13 @@ namespace KMZI
             this.chart1.Series["Sample"].Points.Clear();
             this.chart1.Series["Current"].Points.Clear();
 
+            // Выводим гистограмму эталонных частот
             hystogram_generate_sample(alphabet, alphabet_sample, alphabet_sample_freq, "Sample");
 
+            // Выводим гистограмму для рассчитанных частот
             hystogram_generate_current(alphabet, alphabet_freq);
 
+            // Сортируем полученные частоты
             for(int i = 0; i < alphabet_freq.Length - 1; i++)
             {
                 for(int j = 0; j < alphabet_freq.Length - 1; j++)
@@ -115,6 +122,7 @@ namespace KMZI
             update_listBox();
 
             this.chart1.Series["Current"].Points.Clear();
+            // Выводим гистограмму для рассчитанных частот
             hystogram_generate_current(alphabet, alphabet_freq);
 
             button3.Enabled = true;
@@ -269,16 +277,18 @@ namespace KMZI
             language_setup();    
         }
 
-        // Установить алфавит по-умолчанию, настроить гистограммы, рассчитать частоты
+        // Настройка языка
         private void language_setup()
         {
+            // Если текст поддается обработке...
             if (!textError)
             {
-                set_alphabet();
-                alphabet_freq = calculate_frequency(textBox1.Text, alphabet);
-                this.chart1.Series["Sample"].Points.Clear();
+                // ...то настраиваем язык по-умолчанию (ставим массив нужного языка и эталонные частоты, заменяем буквы, которые не входят в алфавит)
+                set_alphabet(); 
+                alphabet_freq = calculate_frequency(textBox1.Text, alphabet); // Вычисляем частоты букв для входного текста
+                this.chart1.Series["Sample"].Points.Clear(); // Чистим гистограмму от прошлых вычислений
                 this.chart1.Series["Current"].Points.Clear();
-                hystogram_generate_sample(alphabet, alphabet_sample, alphabet_sample_freq, "Sample");
+                hystogram_generate_sample(alphabet, alphabet_sample, alphabet_sample_freq, "Sample"); // Выводим гистограмму эталонных частот для выбранного алфавита
             }
             else
             {

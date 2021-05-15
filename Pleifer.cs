@@ -61,19 +61,19 @@ namespace KMZI
                           { 'V', 'W', 'X', 'Y', 'Z' } };
 
 
-        bool Eng = false;
+        bool Eng = false; // флаг для определения языка введенного текста
         bool Rus = false;
         bool contains = false;
-        bool get1 = false;
-        bool get2 = false;
-        char[,] alphabet_new = null;
-        char[,] alphabet_current = null;
-        char[] non_alphabet = null;
-        int[] non_alphabet_pos = null;
+        bool get1 = false; // получена ли позиция первого символа
+        bool get2 = false; // получена ли позиция второго символа
+        char[,] alphabet_new = null; // обработанный по Альберти алфавит
+        char[,] alphabet_current = null; // язык текущего алфавита
+        char[] non_alphabet = null; // массив для необрабатываемых символов
+        int[] non_alphabet_pos = null; // позиции необрабатываемых символов в тексте
         char[] non_alphabet_temp = null;
         int[] non_alphabet_pos_temp = null;
-        int[] position_of_spaceButton = null;
-        int[] position_of_spaceButton_temp = null;
+        //int[] position_of_spaceButton = null; // позиции пробелов
+        //int[] position_of_spaceButton_temp = null;
         int[] position_of_upper = null;
         int[] position_of_upper_temp = null;
         int[] position_of_x = null;
@@ -90,21 +90,21 @@ namespace KMZI
             textBox2.Clear();
             processBox.Clear();
             alphabet_current = null;
-            position_of_spaceButton_temp = null;
+            //position_of_spaceButton_temp = null;
             position_of_upper_temp = null;
             position_of_x_temp = null;
             non_alphabet_pos_temp = null;
             non_alphabet_temp = null;
             alphabet_new = null;
-            string symbol = null;
-            string symbol2 = null;
+            string symbol;
+            string symbol2;
             temp = null;
             pos1 = new int[2];
             pos2 = new int[2];
             count = 0;
 
             processBox.Text = textBox1.Text; // пересылаем текст во вспомогательное поле во избежание прчи оригинала
-            keyBox.Text = replace_missing_letters(keyBox.Text);
+            keyBox.Text = replace_missing_letters(keyBox.Text); // меняем некоторые буквы в строке, которых нет в алфавите
             processBox.Text = replace_missing_letters(textBox1.Text);
 
 
@@ -113,13 +113,13 @@ namespace KMZI
             {
                 alphabet_current = m_eng;
                 symbol = "x"; //английская х
-                symbol2 = "y";
+                symbol2 = "y"; // а это, если попалась хх
             }
             else
             {
                 alphabet_current = m_rus;
                 symbol = "х"; // русская х
-                symbol2 = "у";
+                symbol2 = "у"; 
             }
 
             // Вносим алфавит во временную строку
@@ -147,7 +147,7 @@ namespace KMZI
             // Шифрование
             if (radioButton1.Checked == true)
             {
-                position_of_spaceButton = null;
+                //position_of_spaceButton = null;
                 non_alphabet = null;
                 non_alphabet_pos = null;
                 position_of_upper = null;
@@ -162,7 +162,7 @@ namespace KMZI
                     {
                         for (int n = 0; n < alphabet_new.GetLength(1); n++)
                         {
-                            if (char.ToLower(processBox.Text[i]) == alphabet_new[m, n] || processBox.Text[i] == ' ')
+                            if (char.ToLower(processBox.Text[i]) == alphabet_new[m, n] /*|| processBox.Text[i] == ' '*/)
                             {
                                 contains = true; // Всё тип-топ, символ содержится в алфавите
                                 break;
@@ -212,25 +212,25 @@ namespace KMZI
                     }
                 }
 
-                // По аналогии с функцией выше, запоммним позиции пробелов в тексте и заменим их на ""
+                
                 for (int i = 0; i < processBox.TextLength; i++)
                 {
-                    if (processBox.Text[i] == ' ')
-                    {
-                        if (position_of_spaceButton == null)
-                        {
-                            position_of_spaceButton = new int[1];
-                            position_of_spaceButton[0] = i;
-                        }
-                        else
-                        {
-                            position_of_spaceButton_temp = new int[position_of_spaceButton.Length];
-                            position_of_spaceButton_temp = position_of_spaceButton;
-                            position_of_spaceButton = new int[position_of_spaceButton.Length + 1];
-                            position_of_spaceButton_temp.CopyTo(position_of_spaceButton, 0);
-                            position_of_spaceButton[position_of_spaceButton.Length - 1] = i;
-                        }
-                    }
+                    //if (processBox.Text[i] == ' ')
+                    //{
+                    //    if (position_of_spaceButton == null)
+                    //    {
+                    //        position_of_spaceButton = new int[1];
+                    //        position_of_spaceButton[0] = i;
+                    //    }
+                    //    else
+                    //    {
+                    //        position_of_spaceButton_temp = new int[position_of_spaceButton.Length];
+                    //        position_of_spaceButton_temp = position_of_spaceButton;
+                    //        position_of_spaceButton = new int[position_of_spaceButton.Length + 1];
+                    //        position_of_spaceButton_temp.CopyTo(position_of_spaceButton, 0);
+                    //        position_of_spaceButton[position_of_spaceButton.Length - 1] = i;
+                    //    }
+                    //}
 
                     // Запоминаем позиции Прописных букв
                     if (char.IsUpper(processBox.Text[i]))
@@ -250,8 +250,8 @@ namespace KMZI
                         }
                     }
                 }
-                processBox.Text = processBox.Text.Replace(" ", ""); // Убираем пробелы
-                processBox.Text = processBox.Text.ToLower(); // Убираем прописные
+                //processBox.Text = processBox.Text.Replace(" ", ""); // Убираем пробелы
+                processBox.Text = processBox.Text.ToLower(); // Убираем прописные буквы
 
                 // Здесь в биграммы вставляется х
                 for (int i = 0; i < processBox.TextLength; i += 2)
@@ -285,7 +285,7 @@ namespace KMZI
                             }
                         }
                     }
-                    else
+                    else // если текст нечетной длины, то на конце ему припишется х
                     {
                         if (processBox.TextLength % 2 != 0)
                         {
@@ -323,35 +323,42 @@ namespace KMZI
                     {
                         for (int j = 0; j < alphabet_new.GetLength(1); j++)
                         {
+                            // Если символ найден в алфавите
                             if (processBox.Text[n] == alphabet_new[i, j])
                             {
-                                pos1[0] = i;
+                                pos1[0] = i; // то запомнили его координаты
                                 pos1[1] = j;
-                                get1 = true;
+                                get1 = true; // и установили флаг, что подобрали символ
                             }
+                            // Здесь по аналогии
                             if (processBox.Text[n + 1] == alphabet_new[i, j])
                             {
                                 pos2[0] = i;
                                 pos2[1] = j;
                                 get2 = true;
                             }
+                            // Если подобраны оба символа, то начинаем преобразование
                             if (get1 == true && get2 == true)
                             {
+                                // Если символы в одной строке...
                                 if (pos1[0] == pos2[0] && pos1[1] != pos2[1])
                                 {
                                     textBox2.Text += alphabet_new[pos1[0], (pos1[1] + 1) % alphabet_new.GetLength(1)];
                                     textBox2.Text += alphabet_new[pos2[0], (pos2[1] + 1) % alphabet_new.GetLength(1)];
                                 }
+                                // Если символы в одном столбце...
                                 if (pos1[0] != pos2[0] && pos1[1] == pos2[1])
                                 {
                                     textBox2.Text += alphabet_new[(pos1[0] + 1) % alphabet_new.GetLength(0), pos1[1]];
                                     textBox2.Text += alphabet_new[(pos2[0] + 1) % alphabet_new.GetLength(0), pos2[1]];
                                 }
+                                // Если символы в разных строках и столбцах
                                 if (pos1[0] != pos2[0] && pos1[1] != pos2[1])
                                 {
                                     textBox2.Text += alphabet_new[pos1[0], pos2[1]];
                                     textBox2.Text += alphabet_new[pos2[0], pos1[1]];
                                 }
+                                // Если (каким-то образом) символ один и тот же
                                 if (pos1[0] == pos2[0] && pos1[1] == pos2[1])
                                 {
                                     textBox2.Text += alphabet_new[pos1[0], (pos1[1] + 1) % alphabet_new.GetLength(1)];
@@ -373,10 +380,13 @@ namespace KMZI
             // Расшифрование
             if (radioButton2.Checked == true)
             {
+                if (textBox1.TextLength % 2 != 0)
+                    return;
+                
                 textBox1.Text = textBox1.Text.ToLower();
                 processBox.Text = textBox1.Text;
 
-                // Преобразуем текст обратно
+                // Расшифрование полностью аналогично шифрованию, но в обратном порядке
                 for (int n = 0; n < processBox.TextLength; n += 2)
                 {
                     for (int i = 0; i < alphabet_new.GetLength(0); i++)
@@ -434,13 +444,13 @@ namespace KMZI
                 }
 
                 // Возвращаем пробелы
-                if (position_of_spaceButton != null)
-                {
-                    for (int i = 0; i < position_of_spaceButton.Length; i++)
-                    {
-                        textBox2.Text = textBox2.Text.Insert(position_of_spaceButton[i], " ");
-                    }
-                }
+                //if (position_of_spaceButton != null)
+                //{
+                //    for (int i = 0; i < position_of_spaceButton.Length; i++)
+                //    {
+                //        textBox2.Text = textBox2.Text.Insert(position_of_spaceButton[i], " ");
+                //    }
+                //}
 
                 // Возвращаем Прописные буквы
                 if (position_of_upper != null)

@@ -227,6 +227,7 @@ namespace KMZI
         {
             listBox1.Items.Clear();
 
+            // Вносим в строку только те символы текста, которые содержатся в алфавите
             string text = "";
             for (int x = 0; x < textBox1.TextLength; x++)
             {
@@ -242,13 +243,12 @@ namespace KMZI
             {
                 column[i] = new Column();
                 column[i].occurrence_of_letters = new int[alphabet.Length];
-
             }
 
-            // Идём по каждому столбцу
+            // Идём по каждому столбцу...
             for (int i = 0; i < column.Length; i++)
             {
-                //  Считаем стречаемые буквы в каждом столбце
+                // ...считаем встречаемые буквы в каждом столбце
                 for (int j = i; j < text.Length; j += column.Length)
                 {
                     if (j < text.Length)
@@ -260,6 +260,7 @@ namespace KMZI
                         column[i].count_of_letters++;
                     }
                 }
+                // Вычисляем индекс совпадений
                 column[i].match_index = Calculate_match_index(column[i].occurrence_of_letters, column[i].count_of_letters);
             }
 
@@ -271,20 +272,21 @@ namespace KMZI
                 column_shifted[i].occurrence_of_letters = new int[alphabet.Length];
             }
 
+            // Начинаем перебор
             for (int x = 1; x < alphabet.Length; x++)
             {
+                // На каждом этапе делаем сдвиг строки по Цезарю
                 string temp_text = Caesar_shift(text, x);
 
                 for (int i = 1; i < column_shifted.Length; i++)
                 {
-
                     column_shifted[i].count_of_letters = 0;
                     for (int k = 0; k < alphabet.Length; k++)
                     {
                         column_shifted[i].occurrence_of_letters[k] = 0;
                     }
 
-                    //  Считаем встречаемые буквы в каждом столбце
+                    // Считаем встречаемые буквы в каждом столбце сдвинутого текста
                     for (int j = i; j < temp_text.Length; j += column_shifted.Length)
                     {
                         if (j < temp_text.Length)
@@ -296,9 +298,11 @@ namespace KMZI
                             column_shifted[i].count_of_letters++;
                         }
                     }
+                    // Расчитываем взаимный индекс совпадений
                     column_shifted[i].match_index = Calculate_reciprocal_match_index(column[0].occurrence_of_letters, column[0].count_of_letters,
                                                                                      column_shifted[i].occurrence_of_letters, column_shifted[i].count_of_letters);
 
+                    // Для каждого столбца запоминаем максимальный полученный индекс
                     if (column_shifted[i].match_index > column_shifted[i].match_index_max)
                     {
                         column_shifted[i].match_index_max = column_shifted[i].match_index;
@@ -307,6 +311,7 @@ namespace KMZI
                 }
             }
 
+            // Генерируем и выводим ключи
             for (int i = 0; i < alphabet.Length; i++)
             {
                 listBox1.Items.Add(Generate_keys(i));
@@ -355,6 +360,7 @@ namespace KMZI
             result += alphabet[shift];
             for (int i = 1; i < column_shifted.Length; i++)
             {
+                // По формуле генерируем ключи
                 result += alphabet[(shift + alphabet.Length - column_shifted[i].max_index_shift) % alphabet.Length];
             }
 
@@ -365,6 +371,7 @@ namespace KMZI
         private void Match_index_method()
         {
             string text = "";
+            // Вгосим в строку только символы, содержащиеся в алфавите
             for (int x = 0; x < textBox1.TextLength; x++)
             {
                 if (alphabet.Contains(Char.ToLower(textBox1.Text[x])))
@@ -373,21 +380,21 @@ namespace KMZI
                 }
             }
 
+            // Создаем столбцы и инициализируем переменные
             column = new Column[Convert.ToInt32(numericUpDown1.Value)];
             for (int i = 0; i < column.Length; i++)
             {
                 column[i] = new Column();
                 column[i].occurrence_of_letters = new int[alphabet.Length];
-
             }
 
             // Идём по каждому столбцу
             for (int i = 0; i < column.Length; i++)
             {
-                //  Считаем стречаемые буквы в каждом столбце
+                //  Считаем встречаемые буквы в каждом столбце
                 for (int j = i; j < text.Length; j += column.Length)
                 {
-                    if (j < text.Length)
+                    if (j < text.Length) // возможно, стоит убрать
                     {
                         if (alphabet.Contains(Char.ToLower(text[j])))
                         {
@@ -396,9 +403,11 @@ namespace KMZI
                         column[i].count_of_letters++;
                     }
                 }
+                // Вычисляем индекс совпадений для данного столбца
                 column[i].match_index = Calculate_match_index(column[i].occurrence_of_letters, column[i].count_of_letters);
             }
 
+            // Выводим полученные индексы
             indexBox.Clear();
             for (int i = 0; i < column.Length; i++)
             {
@@ -411,6 +420,7 @@ namespace KMZI
         // Автокореляционный метод
         private void Autocorrelation_method()
         {
+            // Вносим в строку только символы, которые есть в алфавите
             string text = "";
             for (int x = 0; x < textBox1.TextLength; x++)
             {
@@ -420,12 +430,14 @@ namespace KMZI
                 }
             }
 
+            // Запускаем цикл
             for (int x = 1; x < text.Length; x++)
             {
                 float coin = 0f;
                 float corr = 0f;
-                string temp_text = Shift_cycle(textBox1.Text, x);
+                string temp_text = Shift_cycle(textBox1.Text, x); // Делаем циклический сдвиг
 
+                // Считаем совпадения сдвинутой строки с исходной
                 for (int i = 0; i < text.Length; i++)
                 {
                     if (text[i] == temp_text[i])
@@ -433,16 +445,20 @@ namespace KMZI
                         coin++;
                     }
                 }
+
+                // Вычисляем автокорелляционный коэффициент для данного сдвига
                 corr = coin / (text.Length - x);
                 indexBox.Text += x + ") " + corr + Environment.NewLine;
             }
 
+            // Всё, ожно побирать ключи, открываем кнопку
             button6.Enabled = true;
         }
 
         // Тест Казиски
         private void Kaziski_test()
         {
+            // Вносим только символы, которые содержатся в алфавите
             string text = "";
             for (int x = 0; x < textBox1.TextLength; x++)
             {
@@ -452,7 +468,7 @@ namespace KMZI
                 }
             }
 
-            string template = "";
+            string template = ""; // Здесь будет шаблон, совпадения с которыми будут искаться по тексту
             kaziski = new Kaziski[text.Length - Convert.ToInt32(numericUpDown1.Value) + 1];
             for (int i = 0; i < kaziski.Length; i++)
             {
@@ -460,8 +476,10 @@ namespace KMZI
                 kaziski[i].match_position = new List<int>();
             }
 
+            // Идём по всему тексту в поисках лбых совпадений
             for (int x = 0; x < text.Length - numericUpDown1.Value + 1; x++)
             {
+                // Берем в качестве шаблона блок текста
                 for (int i = 0; i < numericUpDown1.Value; i++)
                 {
                     template += text[x + i];
@@ -470,6 +488,7 @@ namespace KMZI
 
 
                 int index = text.IndexOf(template, 0);
+                // Ищем и запоминаем любые вхождения шаблона в строку
                 while (index > -1)
                 {
                     kaziski[x].match_position.Add(index);
@@ -478,10 +497,13 @@ namespace KMZI
                 template = "";
             }
 
+            // Перебираем все обработанные шаблоны...
             for (int i = 0; i < kaziski.Length; i++)
             {
+                // ...и если шаблон встречался в строке больше двух раз...
                 if (kaziski[i].match_position.Count > 1)
                 {
+                    // ...то вычисляем дистанции меежду позициями
                     kaziski[i].match_distance = new int[kaziski[i].match_position.Count - 1];
                     for (int j = 0; j < kaziski[i].match_position.Count - 1; j++)
                     {
@@ -494,6 +516,7 @@ namespace KMZI
                 }
             }
 
+
             for (int i = 0; i < kaziski.Length; i++)
             {
                 if (kaziski[i].match_position.Count > 1)
@@ -502,6 +525,7 @@ namespace KMZI
 
                     for (int j = 1; j < kaziski[i].match_distance.Length; j++)
                     {
+                        // Вычисляем НОД для всех найденных расстояний, где было больше двух совпадений
                         result = Calculate_GCD(kaziski[i].match_distance[j], result);
                     }
 
@@ -509,6 +533,7 @@ namespace KMZI
                 }
             }
 
+            // Считаем, сколько раз было больше двух совпадений...
             int count = 0;
             for (int i = 0; i < kaziski.Length; i++)
             {
@@ -518,6 +543,7 @@ namespace KMZI
                 }
             }
 
+            // ...чтобы создать массив НОДов
             int[] gcd_array = new int[count];
             count = 0;
             for (int i = 0; i < kaziski.Length; i++)
@@ -535,8 +561,10 @@ namespace KMZI
                 indexBox.Text += "Нет совпадений";
                 return;
             }
+            // Находим самый частовстречающийся НОД...
             var most = gcd_array.GroupBy(x => x).OrderByDescending(x => x.Count()).First();
 
+            // ...и предполагаем, что он кратен вероятной длине ключа
             indexBox.Text += "Вероятная длина: " + most.Key + Environment.NewLine;
             for (int i = 0; i < kaziski.Length; i++)
             {
