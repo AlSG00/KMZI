@@ -34,213 +34,405 @@ namespace KMZI
             button16.Enabled = true;    // Частотный криптоанализ
             button17.Enabled = true;    // Криптоанализ полиалфавитных шифров
             button18.Enabled = true;    // Гаммирование
-            button19.Enabled = false;   // DES
+            button19.Enabled = true;    // DES
             button1.Enabled = true;     // ГОСТ
 
             groupStartButtons.Visible = true;
             groupStartButtons.Enabled = true;
         }
 
+        Options formSetting;
+        Atbash formAtbash;
+        Skitala formSkitala;
+        Polibium formPolibia;
+        Caesar formCaezar;
+        FormHelp help;
+        Kardano formKardano;
+        Rishelie formRishelie;
+        Alberti formAlberti;
+        Gronsfeld formGronsfeld;
+        Vizhiner formVizhiner;
+        Pleifer formPleifer;
+        Hill formHill;
+        Vernam formVernam;
+        Freq formFreq;
+        PoliCypher formPoliCypher;
+        Gamma formGamma;
+        DES formDES;
+        GOST formGOST;
+
+        // Кнопка "Настройки"
         private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Options formSetting = new Options();
-            formSetting.Show();
+            if (formSetting == null || formSetting.IsDisposed)
+            {
+                formSetting = new Options();
+                formSetting.Show();
+            }
+            else
+            {
+                formSetting.Activate();
+            }
         }
 
+        // Кнопка "Атбаш"
         private void button3_Click_1(object sender, EventArgs e)
         {
-            Atbash formAtbash = new Atbash();
-            formAtbash.Show();
+            if (formAtbash == null || formAtbash.IsDisposed)
+            {
+                formAtbash = new Atbash();
+                formAtbash.Show();
+            }
+            else
+            {
+                formAtbash.Activate();
+            }
         }
 
+        // Кнопка "Сцитала"
         private void button5_Click(object sender, EventArgs e)
-        {
-            Skitala formSkitala = new Skitala();
-            formSkitala.Show();
+        {           
+            if (formSkitala == null || formSkitala.IsDisposed)
+            {
+                formSkitala = new Skitala();
+                formSkitala.Show();
+            }
+            else
+            {
+                formSkitala.Activate();
+            }
         }
 
+        // Кнопка "Квадрат Полибия"
         private void button6_Click(object sender, EventArgs e)
         {
-            Polibium formPolibia = new Polibium();
-            formPolibia.Show();
+            if (formPolibia == null || formPolibia.IsDisposed)
+            {
+                formPolibia = new Polibium();
+                formPolibia.Show();
+            }
+            else
+            {
+                formPolibia.Activate();
+            }
         }
 
+        // Кнопка "Цезарь"
         private void button7_Click(object sender, EventArgs e)
-        {
-            Caesar formCaezar = new Caesar();
-            formCaezar.Show();
+        {            
+            if (formCaezar == null || formCaezar.IsDisposed)
+            {
+                formCaezar = new Caesar();
+                formCaezar.Show();
+            }
+            else
+            {
+                formCaezar.Activate();
+            }
         }
 
+        // Кнопка "Помощь" во вкладке "Справка"
         private void помощьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormHelp help = new FormHelp();
-            help.Show();
+            if (help == null || help.IsDisposed)
+            {
+                help = new FormHelp();
+                help.Show();
+            }
+            else
+            {
+                help.Activate();
+            }
         }
 
+        // Кнопка "Кардано"
         private void button8_Click(object sender, EventArgs e)
         {
-            Kardano formKardano = new Kardano();
-            formKardano.Show();
+            if (formKardano == null || formKardano.IsDisposed)
+            {
+                formKardano = new Kardano();
+                formKardano.Show();
+            }
+            else
+            {
+                formKardano.Activate();
+            }
         }
 
+        // Кнопка "Ришелье"
         private void button9_Click(object sender, EventArgs e)
         {
-            Rishelie formRishelie = new Rishelie();
-            formRishelie.Show();
+            if (formRishelie == null || formRishelie.IsDisposed)
+            {
+                formRishelie = new Rishelie();
+                formRishelie.Show();
+            }
+            else
+            {
+                formRishelie.Activate();
+            }
         }
 
+        // Кнопка "Диск Альберти"
         private void button10_Click(object sender, EventArgs e)
         {
-            Alberti formAlberti = new Alberti();
-            formAlberti.Show();
+            if (formAlberti == null || formAlberti.IsDisposed)
+            {
+                formAlberti = new Alberti();
+                formAlberti.Show();
+            }
+            else
+            {
+                formAlberti.Activate();
+            }
         }
 
+        // Кнопка "Гронсфельд"
         private void button11_Click(object sender, EventArgs e)
         {
-            Gronsfeld formGronsfeld = new Gronsfeld();
-            formGronsfeld.Show();
+            if (formGronsfeld == null || formGronsfeld.IsDisposed)
+            {
+                formGronsfeld = new Gronsfeld();
+                formGronsfeld.Show();
+            }
+            else
+            {
+                formGronsfeld.Activate();
+            }
         }
 
+        // Кнопка "Виженер"
         private void button12_Click(object sender, EventArgs e)
         {
-            Vizhiner formVizhiner = new Vizhiner();
-            formVizhiner.Show();
+            if (formVizhiner == null || formVizhiner.IsDisposed)
+            {
+                formVizhiner = new Vizhiner();
+                formVizhiner.Show();
+            }
+            else
+            {
+                formVizhiner.Activate();
+            }
         }
 
+        // Кнопка "Плейфер"
         private void button13_Click(object sender, EventArgs e)
         {
-            Pleifer formPleifer = new Pleifer();
-            formPleifer.Show();
+            if (formPleifer == null || formPleifer.IsDisposed)
+            {
+                formPleifer = new Pleifer();
+                formPleifer.Show();
+            }
+            else
+            {
+                formPleifer.Activate();
+            }
         }
 
+        // Кнопка "Криптосистем Хилла"
         private void button14_Click(object sender, EventArgs e)
         {
-            Hill formHill = new Hill();
-            formHill.Show();
+            if (formHill == null || formHill.IsDisposed)
+            {
+                formHill = new Hill();
+                formHill.Show();
+            }
+            else
+            {
+                formHill.Activate();
+            }
         }
 
+        // Кнопка "Вернам"
         private void button15_Click(object sender, EventArgs e)
         {
-            Vernam formVernam = new Vernam();
-            formVernam.Show();
+            if (formVernam == null || formVernam.IsDisposed)
+            {
+                formVernam = new Vernam();
+                formVernam.Show();
+            }
+            else
+            {
+                formVernam.Activate();
+            }
         }
 
+        // Кнопка "Частотный криптоанализ"
         private void button16_Click(object sender, EventArgs e)
         {
-            Freq formFreq = new Freq();
-            formFreq.Show();
+            if (formFreq == null || formFreq.IsDisposed)
+            {
+                formFreq = new Freq();
+                formFreq.Show();
+            }
+            else
+            {
+                formFreq.Activate();
+            }
         }
 
+        // Кнопка "Криптоанализ Полиалфавитных шифров"
         private void button17_Click(object sender, EventArgs e)
         {
-            PoliCypher formPoliCypher = new PoliCypher();
-            formPoliCypher.Show();
+            if (formPoliCypher == null || formPoliCypher.IsDisposed)
+            {
+                formPoliCypher = new PoliCypher();
+                formPoliCypher.Show();
+            }
+            else
+            {
+                formPoliCypher.Activate();
+            }
         }
 
+        // Кнопка "Гаммирование"
         private void button18_Click(object sender, EventArgs e)
         {
-            Gamma formGamma = new Gamma();
-            formGamma.Show();
+            if (formGamma == null || formGamma.IsDisposed)
+            {
+                formGamma = new Gamma();
+                formGamma.Show();
+            }
+            else
+            {
+                formGamma.Activate();
+            }
         }
 
+        // Кнопка "DES"
         private void button19_Click(object sender, EventArgs e)
         {
-            DES formDES = new DES();
-            formDES.Show();
+            if (formDES == null || formDES.IsDisposed)
+            {
+                formDES = new DES();
+                formDES.Show();
+            }
+            else
+            {
+                formDES.Activate();
+            }
         }
 
+        // Кнопка "ГОСТ"
         private void button1_Click(object sender, EventArgs e)
         {
-            GOST formGOST = new GOST();
-            formGOST.Show();
+
+            if (formGOST == null || formGOST.IsDisposed)
+            {
+                formGOST = new GOST();
+                formGOST.Show();
+            }
+            else
+            {
+                formGOST.Activate();
+            }
         }
 
+        /* Следующие кнопки дублируют кнопки из основной формы и расположены во вкладке "Шифры" */
+        
+        // Кнопка "Атбаш"
         private void атбашToolStripMenuItem_Click(object sender, EventArgs e)
         {
             button3_Click_1(sender, e);
         }
 
+        // Кнопка "Сцитала"
         private void сциталаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             button5_Click(sender, e);
         }
 
+        // Кнопка "Квадрат Полибия"
         private void квадратПолибияToolStripMenuItem_Click(object sender, EventArgs e)
         {
             button6_Click(sender, e);
         }
 
-
-
+        // Кнопка "Цезарь"
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             button7_Click(sender, e);
         }
+
+        // Кнопка "Кардано"
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             button8_Click(sender, e);
         }
 
+        // Кнопка "Ришелье"
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             button9_Click(sender, e);
         }
 
+        // Кнопка "Диск Альберти"
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             button10_Click(sender, e);
         }
 
+        // Кнопка "Гронсфельд"
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
             button11_Click(sender, e);
         }
 
+        // Кнопка "Виженер"
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
             button12_Click(sender, e);
         }
 
+        // Кнопка "Плейфер"
         private void toolStripMenuItem7_Click(object sender, EventArgs e)
         {
             button13_Click(sender, e);
         }
 
+        // Кнопка "Криптосистема Хилла"
         private void toolStripMenuItem8_Click(object sender, EventArgs e)
         {
             button14_Click(sender, e);
         }
 
+        // Кнопка "Вернам"
         private void toolStripMenuItem9_Click(object sender, EventArgs e)
         {
             button15_Click(sender, e);
         }
 
+        // Кнопка "Частотный критоанализ"
         private void toolStripMenuItem10_Click(object sender, EventArgs e)
         {
             button16_Click(sender, e);
         }
 
+        // Криптоанализ полиалфавитных шифров
         private void toolStripMenuItem11_Click(object sender, EventArgs e)
         {
             button17_Click(sender, e);
         }
 
+        // Кнопка "Гаммирование"
         private void toolStripMenuItem12_Click(object sender, EventArgs e)
         {
             button18_Click(sender, e);
         }
 
+        // Кнопка "DES"
         private void toolStripMenuItem13_Click(object sender, EventArgs e)
         {
             button19_Click(sender, e);
         }
 
+        // Кнопка "ГОСТ"
         private void toolStripMenuItem14_Click(object sender, EventArgs e)
         {
             button1_Click(sender, e);
         }
 
+        // Кнопка "Выход"
         private void exit_Click(object sender, EventArgs e)
         {
             Close();
