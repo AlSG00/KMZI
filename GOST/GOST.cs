@@ -56,7 +56,7 @@ namespace KMZI
         bool is_text_detailed;          // Нужен ли подробный вывод (всех байтов)
         int index = 0;
         bool is_gamming = false;
-
+        byte[] junkBytes = Encoding.Default.GetBytes("0"); // Мусорные байты длля дополнения до нужного размера
         GOST_Options options;
 
         // Кнопка Шифрования/Расшифрования
@@ -88,7 +88,7 @@ namespace KMZI
 
             // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
             // и его необходимо заполнить данными из поля ввода
-            if (is_text_from_file == false || inFile == null)
+            if (is_text_from_file == false && inFile == null)
             {
                 inFile = Encoding.Default.GetBytes(inBox.Text);
             }
@@ -102,11 +102,10 @@ namespace KMZI
                 {
                     count++;
                 }
-
-                byte[] junkBytes = Encoding.Default.GetBytes("0");
-                byte[] inTemp = new byte[inFile.Length];
+              
+                byte[] inTemp = new byte[inFile.Length]; // переносим входные данные во временный массив
                 inFile.CopyTo(inTemp, 0);
-                inFile = new byte[count];
+                inFile = new byte[count]; // расширяем массив входных данных
 
                 // Расширяем исходный массив байтов на нужное количество и в конце приписываем несколько байтов
                 for (int i = 0; i < inTemp.Length; i++)
@@ -117,9 +116,7 @@ namespace KMZI
                 {
                     inFile[i] = junkBytes[0];
                 }
-
-                outFile = new byte[inFile.Length]; // Сразу сделаем выходной массив
-
+               
                 // Вместо первого символа ключа подставим число, равное количеству символов, приписанных в конце
                 // чтобы потом убрать их из расшифрованного текста
                 string key = "";
@@ -133,13 +130,18 @@ namespace KMZI
                 keyBox.Text = key;
             }
 
-            byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text); // Переводим текст и ключ в байты
+            outFile = new byte[inFile.Length]; // Сразу сделаем выходной массив
+
+            // Переводим текст и ключ в байты
+            byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text); 
             byte[] text_byte = inFile;
 
-            var key_bit = new BitArray(key_byte); // Переводим байтовые значения текста и ключа в биты
+            // Переводим байтовые значения текста и ключа в биты
+            var key_bit = new BitArray(key_byte); 
             var text_bit = new BitArray(text_byte);
 
-            int[,] binary_key = new int[8, 32]; // массив для двоичного представления ключа
+            // массив для двоичного представления ключа
+            int[,] binary_key = new int[8, 32]; 
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 32; j++)
@@ -152,6 +154,7 @@ namespace KMZI
                 }
             }
             ProgressBar_Default();
+
 
             // Идём по блокам текста
             for (int i = 0; i < inFile.Length; i += 8)
@@ -173,7 +176,6 @@ namespace KMZI
                 int[] senior_int = new int[32];
                 int[] junior_int = new int[32];
                 int[] junior_int_old = new int[32];
-                int[] result = new int[32];
 
                 // Копируем значения массива битов в численные массивы
                 for (int m = 0; m < 32; m++)
@@ -259,6 +261,7 @@ namespace KMZI
                     }
                 }
 
+                // Заносим результаты в выходной массив
                 senior_bits.CopyTo(outFile, i);
                 junior_bits.CopyTo(outFile, i + 4);
                 progressBar1.PerformStep();
@@ -267,9 +270,11 @@ namespace KMZI
             // Отрезаем лишние блоки байтов при расшифровке
             if (radioButton2.Checked)
             {
-                byte[] outTemp = new byte[outFile.Length];
-                outFile.CopyTo(outTemp, 0);
+                byte[] outTemp = new byte[outFile.Length]; // Копируем выходные данные во временный массив
+                outFile.CopyTo(outTemp, 0);              
+                // Пересоздаем выходной массив по принципу: длина минус число ранее приписанных байт
                 outFile = new byte[outTemp.Length - Convert.ToInt32(keyBox.Text[0].ToString())];
+                // Заносим данные обратно в массив
                 for (int i = 0; i < outFile.Length; i++)
                 {
                     outFile[i] = outTemp[i];
@@ -291,29 +296,33 @@ namespace KMZI
         // Алгоритм шифрования в режиме гаммирования с обратной связью
         private void Perform_Gamma_With_Back_Connection()
         {
+            int count = 0;
+
             if (!Check_KeyLength())
                 return;
-            
+
             // проверка корректности синхропосылки
             if (!Check_SynchroBox_Length())
                 return;
 
             // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
             // и его необходимо заполнить данными из поля ввода
-            if (is_text_from_file == false || inFile == null)
+            if (is_text_from_file == false && inFile == null)
             {
                 inFile = Encoding.Default.GetBytes(inBox.Text);
             }
 
-            outFile = new byte[inFile.Length];
+            outFile = new byte[inFile.Length]; // Сразу сделаем выходной массив
 
             byte[] synchro_package = Encoding.Default.GetBytes(synchroBox.Text);
             byte[] text_byte = inFile;
+            byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text);
 
-            byte[] key_byte = Encoding.Default.GetBytes(keyBox.Text); // Переводим текст и ключ в байты
+            var text_bit = new BitArray(text_byte);
+            var synchro_bits = new BitArray(synchro_package);
+            var key_bit = new BitArray(key_byte);
 
-            var key_bit = new BitArray(key_byte); // Переводим байтовые значения текста и ключа в биты
-
+            index = 0;
             int[,] binary_key = new int[8, 32]; // массив для двоичного представления ключа
             for (int i = 0; i < 8; i++)
             {
@@ -326,11 +335,10 @@ namespace KMZI
                     index++;
                 }
             }
-            var text_bit = new BitArray(text_byte);
-            var synchro_bits = new BitArray(synchro_package);
 
             index = 0;
 
+            // перегоняем синхропосылку в массив
             int[] synchro_binary = new int[64];
             for (int m = 0; m < 64; m++)
             {
@@ -352,19 +360,22 @@ namespace KMZI
                 // Копируем блок текста в созданные половины, разбив его на старшую и младшую половины
                 if (i == 0)
                 {
+                    // В качестве первого блока выступает синхропосылка
                     Array.Copy(synchro_package, 0, temp_senior_byte, 0, 4);
                     Array.Copy(synchro_package, 4, temp_junior_byte, 0, 4);
-
                 }
                 else
                 {
+                    // В качестве последующих блоков выступают блоки текста
                     if (radioButton1.Checked)
                     {
+                        // При шифровании используются ранее зашифрованные блоки текста
                         Array.Copy(outFile, i - 8, temp_senior_byte, 0, 4);
                         Array.Copy(outFile, i - 4, temp_junior_byte, 0, 4);
                     }
                     else
                     {
+                        // При расшифровании используются зашифрованные блоки текста
                         Array.Copy(inFile, i - 8, temp_senior_byte, 0, 4);
                         Array.Copy(inFile, i - 4, temp_junior_byte, 0, 4);
                     }
@@ -379,8 +390,6 @@ namespace KMZI
                 int[] senior_int = new int[32];
                 int[] junior_int = new int[32];
                 int[] junior_int_old = new int[32];
-
-                int[] result = new int[32];
 
                 // Копируем значения массива битов в численные массивы
                 for (int m = 0; m < 32; m++)
@@ -406,20 +415,9 @@ namespace KMZI
                     index = (index + 1) % 8; // меняем блок накладываемого ключа
 
                     // При шифровании ключ инвертируется на последние 8 раундов
-                    if (radioButton1.Checked)
+                    if (j == 23)
                     {
-                        if (j == 23)
-                        {
-                            binary_key = Invert_key_GOST(binary_key);
-                        }
-                    }
-                    // При расшифровании ключ инвертируется после первых 8-ми раундов
-                    else if (radioButton2.Checked)
-                    {
-                        if (j == 7)
-                        {
-                            binary_key = Invert_key_GOST(binary_key);
-                        }
+                        binary_key = Invert_key_GOST(binary_key);
                     }
 
                     // Шаг 2 - разбиение младшей части на блоки по 4 бита с целью замены по таблице s-блоков
@@ -428,7 +426,8 @@ namespace KMZI
                     // Шаг 3 - циклический сдвиг влево на 11 бит
                     junior_int = Shift_Binary_Array(junior_int);
 
-                    //junior_int = Xor_Int_Arrays(junior_int, senior_int);
+                    // Шаг 4 - Сложение младшей половины со старшей по модулю 2(исключающее ИЛИ)
+                    junior_int = Xor_Int_Arrays(junior_int, senior_int);
                     // Смена блоков местами
                     if (j == 31) // 32-й райнд. Новый младший блок становится старшим, старый младший остается и становится вместо нового младшего
                     {
@@ -465,9 +464,14 @@ namespace KMZI
                     }
                 }
 
+                /* начинаем стряпать гамму */
+
+                // обработанные половины блока заносим в массив и будем использовать как блок гаммы
                 byte[] gamma = new byte[8];
                 senior_bits.CopyTo(gamma, 0);
                 junior_bits.CopyTo(gamma, 4);
+
+                // Во времнный массив вносим часть текста дял обработки
                 byte[] temp_text;
                 if (i + 8 > inFile.Length)
                 {
@@ -478,15 +482,9 @@ namespace KMZI
                     temp_text = new byte[8];
                 }
 
-                if (i == 0)
-                {
-                    Array.Copy(inFile, i, temp_text, 0, temp_text.Length);
-                }
-                else
-                {
-                    Array.Copy(inFile, i, temp_text, 0, temp_text.Length);
-                }
+                Array.Copy(inFile, i, temp_text, 0, temp_text.Length);
 
+                // ТУТ МОЖНО УПРОСТИТЬ
                 var temp_bits = new BitArray(temp_text);
                 var gamma_bits = new BitArray(gamma);
 
@@ -587,14 +585,15 @@ namespace KMZI
         // Замена байтов 4-х битных блоков с использзованием s-блоков
         private int[] Four_Bit_Replace(int[] block)
         {
-            int[] blocks_4_bits = new int[8];
+
+            int[] blocks_4_bits = new int[8]; // Создаем массив для 4-х битных блоков
             for (int m = 0; m < blocks_4_bits.Length; m++)
             {
                 for (int n = 0; n < 4; n++)
                 {
                     if (block[m * 4 + n] == 1)
                     {
-                        // Тут 4-х битное число преобразуется в десятичное
+                        // Тут 4-х битное двоичное число преобразуется в десятичное
                         blocks_4_bits[m] += Convert.ToInt32(Math.Pow(Convert.ToDouble(2), Convert.ToDouble(3 - n)));
                     }
                 }
@@ -613,7 +612,7 @@ namespace KMZI
                 string binary_block = Convert.ToString(blocks_4_bits[m], 2);
                 while (binary_block.Length < 4)
                 {
-                    // Делаем все значени 4-х битными
+                    // Делаем все значения 4-х битными
                     binary_block = binary_block.Insert(0, "0");
                 }
 
@@ -677,10 +676,9 @@ namespace KMZI
 
         // Кнопка переноса текста из окна результата в окно ввода
         private void button1_Click(object sender, EventArgs e)
-
         {
             // Главное - перенести сформировавшийся масив байтов
-            if (inFile != null)
+            if (inFile != null && outFile != null)
             {
                 outFile.CopyTo(inFile, 0);
                 inBox.Clear();
@@ -902,11 +900,10 @@ namespace KMZI
                     Clear_All_Fields();
                     is_text_from_file = false;
                     ProgressBar_Reset();
-                    //label1.Visible = false;
-                    //label2.Visible = false;
-                    //label3.Visible = false;
                     RadioButton_Reset();
-                    //label4.Visible = false;
+                    Set_Fields_State(false);
+                    inFile = null;
+                    outFile = null;
                 }
             }
             else
@@ -914,11 +911,10 @@ namespace KMZI
                 Clear_All_Fields();              
                 is_text_from_file = false;
                 ProgressBar_Reset();
-                //label1.Visible = false;
+                inFile = null;
+                outFile = null;
                 RadioButton_Reset();
-                //label2.Visible = false;
-                //label3.Visible = false;
-                //label4.Visible = false;
+                Set_Fields_State(false);
             }
 
         }
@@ -952,8 +948,8 @@ namespace KMZI
         {
             label1.Text = keyBox.TextLength.ToString(); // Над полем ввода ключа отображается длина введенного ключа     
                                                         // В зависимости от длины ключа меняется цветовая индикация и состояние кнопки
-            if (comboBox1.SelectedIndex == 0)
-            {
+            //if (comboBox1.SelectedIndex == 0)
+            //{
                 if (keyBox.TextLength == 32)
                 {
                     label1.BackColor = Color.LimeGreen;
@@ -978,7 +974,7 @@ namespace KMZI
                     label1.ForeColor = Color.White;
                     button6.Enabled = false;
                 }
-            }
+            //}
         }
 
         // Цветовая индикация и активация кнопки в зависимости от длины синхропосылки
@@ -1035,8 +1031,8 @@ namespace KMZI
                 case (1):
                     Clear_All_Fields();
                     RadioButton_Reset();
-                    label1.Visible = false;
-                    label2.Visible = false;
+                    label1.Visible = true;
+                    label2.Visible = true;
                     label3.Visible = true;
                     label4.Visible = true;
                     groupBox2.Enabled = true;
@@ -1063,14 +1059,13 @@ namespace KMZI
             if (is_gamming)
             {
                 synchroBox.Enabled = true;
-                keyBox.Enabled = false;
             }
             else
             {
                 synchroBox.Enabled = false;
-                keyBox.Enabled = true;
             }
-    }
+            keyBox.Enabled = true;
+        }
 
         // Кнопка "Расшифрование" - активирует оставшиеся groupBox
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
@@ -1079,13 +1074,12 @@ namespace KMZI
             if (is_gamming)
             {
                 synchroBox.Enabled = true;
-                keyBox.Enabled = false;
             }
             else
             {
                 synchroBox.Enabled = false;
-                keyBox.Enabled = true;
             }
+            keyBox.Enabled = true;
         }
 
         // Кнопка "Настройки" - вызывает форму с настройками. Сейчас  не работает
