@@ -64,7 +64,6 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -133,6 +132,7 @@
             this.synchroBox.Name = "synchroBox";
             this.synchroBox.Size = new System.Drawing.Size(152, 20);
             this.synchroBox.TabIndex = 3;
+            this.synchroBox.TextChanged += new System.EventHandler(this.synchroBox_TextChanged);
             // 
             // keyBox
             // 
@@ -144,6 +144,7 @@
             this.keyBox.Name = "keyBox";
             this.keyBox.Size = new System.Drawing.Size(224, 20);
             this.keyBox.TabIndex = 0;
+            this.keyBox.TextChanged += new System.EventHandler(this.keyBox_TextChanged);
             // 
             // label2
             // 
@@ -152,9 +153,9 @@
             this.label2.Location = new System.Drawing.Point(653, 46);
             this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 3, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.Size = new System.Drawing.Size(22, 13);
             this.label2.TabIndex = 13;
-            this.label2.Text = ":  32";
+            this.label2.Text = ":  7";
             // 
             // label1
             // 
@@ -163,9 +164,9 @@
             this.label1.Location = new System.Drawing.Point(632, 46);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(19, 13);
+            this.label1.Size = new System.Drawing.Size(13, 13);
             this.label1.TabIndex = 11;
-            this.label1.Text = "32";
+            this.label1.Text = "7";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // groupBox4
@@ -235,6 +236,7 @@
             this.inBox_Clear.TabIndex = 4;
             this.inBox_Clear.Text = "C";
             this.inBox_Clear.UseVisualStyleBackColor = true;
+            this.inBox_Clear.Click += new System.EventHandler(this.inBox_Clear_Click);
             // 
             // inBox
             // 
@@ -269,6 +271,7 @@
             this.clear_all.TabIndex = 19;
             this.clear_all.Text = "Очистить все поля";
             this.clear_all.UseVisualStyleBackColor = true;
+            this.clear_all.Click += new System.EventHandler(this.clear_all_Click);
             // 
             // groupBox5
             // 
@@ -305,6 +308,7 @@
             this.outBox_Clear.TabIndex = 4;
             this.outBox_Clear.Text = "C";
             this.outBox_Clear.UseVisualStyleBackColor = true;
+            this.outBox_Clear.Click += new System.EventHandler(this.outBox_Clear_Click);
             // 
             // outBox
             // 
@@ -352,6 +356,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Расшифрование";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -363,12 +368,12 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Шифрование";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem,
-            this.настройкиToolStripMenuItem});
+            this.файлToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(934, 24);
@@ -403,12 +408,14 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(265, 22);
             this.toolStripMenuItem1.Text = "Открыть файл ключа";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(265, 22);
             this.toolStripMenuItem3.Text = "Открыть файл синхропосылки";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripSeparator1
             // 
@@ -427,12 +434,14 @@
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(265, 22);
             this.toolStripMenuItem2.Text = "Сохранить ключ в файл";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(265, 22);
             this.toolStripMenuItem4.Text = "Сохранить синхропосылку в файл";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripSeparator2
             // 
@@ -445,12 +454,6 @@
             this.выходToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
-            // 
-            // настройкиToolStripMenuItem
-            // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
             // 
             // openFileDialog1
             // 
@@ -468,6 +471,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(203, 21);
             this.comboBox1.TabIndex = 7;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -551,7 +555,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox comboBox1;

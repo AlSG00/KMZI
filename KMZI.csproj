@@ -77,6 +77,7 @@
     <Compile Include="GOST\GOST_Options.Designer.cs">
       <DependentUpon>GOST_Options.cs</DependentUpon>
     </Compile>
+    <Compile Include="GOST_DES.cs" />
     <Compile Include="Hill.cs">
       <SubType>Form</SubType>
     </Compile>

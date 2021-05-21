@@ -63,7 +63,11 @@ namespace KMZI
         private void button6_Click(object sender, EventArgs e)
         {
             outBox.Clear();
-
+            if (inBox.TextLength == 0)
+            {
+                MessageBox.Show("Введите текст.", "Ошибка шифрования", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                return;
+            }
             // Выбор режима работы шифра
             switch (comboBox1.SelectedIndex)
             {
@@ -85,6 +89,20 @@ namespace KMZI
             // Проверка длины ключа
             if (!Check_KeyLength())
                 return;
+
+            if (radioButton2.Checked)
+            {
+                if (!Char.IsDigit(keyBox.Text[0]))
+                {
+                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+                else if (Convert.ToInt32(keyBox.Text[0].ToString()) > 7)
+                {
+                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
             // и его необходимо заполнить данными из поля ввода
@@ -155,6 +173,16 @@ namespace KMZI
             }
             ProgressBar_Default();
 
+            if(radioButton2.Checked)
+            {
+                if(inFile.Length % 8 != 0)
+                {
+                    inBox.Clear();
+                    inFile = null;
+                    MessageBox.Show("Некорректный ввод", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }              
+            }
 
             // Идём по блокам текста
             for (int i = 0; i < inFile.Length; i += 8)
@@ -195,6 +223,7 @@ namespace KMZI
                 index = 0;
                 for (int j = 0; j < 32; j++)
                 {
+
                     //Шаг 1 - сложение двоичных чисел по модулю 32
                     junior_int = Perform_Sum_By_32(junior_int, binary_key);
                     index = (index + 1) % 8; // меняем блок накладываемого ключа
@@ -296,14 +325,26 @@ namespace KMZI
         // Алгоритм шифрования в режиме гаммирования с обратной связью
         private void Perform_Gamma_With_Back_Connection()
         {
-            int count = 0;
-
             if (!Check_KeyLength())
                 return;
 
             // проверка корректности синхропосылки
             if (!Check_SynchroBox_Length())
                 return;
+
+            if (radioButton2.Checked)
+            {
+                if (!Char.IsDigit(keyBox.Text[0]))
+                {
+                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+                else if (Convert.ToInt32(keyBox.Text[0].ToString()) > 7)
+                {
+                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
             // и его необходимо заполнить данными из поля ввода
@@ -677,9 +718,10 @@ namespace KMZI
         // Кнопка переноса текста из окна результата в окно ввода
         private void button1_Click(object sender, EventArgs e)
         {
-            // Главное - перенести сформировавшийся масив байтов
-            if (inFile != null && outFile != null)
+            if (outFile != null)
             {
+                inFile = new byte[outFile.Length];
+
                 outFile.CopyTo(inFile, 0);
                 inBox.Clear();
                 inBox.Text = outBox.Text;
@@ -701,7 +743,7 @@ namespace KMZI
             // Если ключ недостаточной длины - дополняем его зацикливанием
             if (keyBox.TextLength < 32)
             {
-                var result = MessageBox.Show("Недостаточная длина ключа!\n Дополнить ключ при помощи закикливания?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var result = MessageBox.Show("Недостаточная длина ключа!\n Дополнить ключ при помощи зацикливания?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
                     int count = 0;
@@ -754,12 +796,16 @@ namespace KMZI
             // Если ключ недостаточной длины - дополняем его зацикливанием
             if (synchroBox.TextLength < 8)
             {
-                var result = MessageBox.Show("Недостаточная длина синхропосылки!\n Дополнить синхропосылку при помощи закикливания?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var result = MessageBox.Show("Недостаточная длина синхропосылки!\n Дополнить синхропосылку при помощи зацикливания?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
+                    if (synchroBox.TextLength == 0)
+                    {
+                        synchroBox.Text += "1";
+                    }
                     int count = 0;
                     int length = synchroBox.TextLength;
-
+                 
                     while (synchroBox.TextLength < 8)
                     {
                         synchroBox.Text += synchroBox.Text[count % length];
@@ -982,33 +1028,31 @@ namespace KMZI
         {
             label4.Text = synchroBox.TextLength.ToString(); // Над полем ввода ключа отображается длина введенного ключа     
 
-            if (comboBox1.SelectedIndex == 1)
+            if (synchroBox.TextLength == 8)
             {
-                if (synchroBox.TextLength == 8)
-                {
-                    label4.BackColor = Color.LimeGreen;
-                    label4.ForeColor = Color.Black;
-                    button6.Enabled = true;
-                }
-                else if (synchroBox.TextLength > 8)
-                {
-                    label4.BackColor = Color.Gold;
-                    label4.ForeColor = Color.Black;
-                    button6.Enabled = true;
-                }
-                else if (synchroBox.TextLength > 0 && synchroBox.TextLength < 8)
-                {
-                    label4.BackColor = Color.OrangeRed;
-                    label4.ForeColor = Color.White;
-                    button6.Enabled = true;
-                }
-                else if (synchroBox.TextLength == 0)
-                {
-                    label4.BackColor = Color.OrangeRed;
-                    label4.ForeColor = Color.White;
-                    button6.Enabled = false;
-                }
+                label4.BackColor = Color.LimeGreen;
+                label4.ForeColor = Color.Black;
+                button6.Enabled = true;
             }
+            else if (synchroBox.TextLength > 8)
+            {
+                label4.BackColor = Color.Gold;
+                label4.ForeColor = Color.Black;
+                button6.Enabled = true;
+            }
+            else if (synchroBox.TextLength > 0 && synchroBox.TextLength < 8)
+            {
+                label4.BackColor = Color.OrangeRed;
+                label4.ForeColor = Color.White;
+                button6.Enabled = true;
+            }
+            else if (synchroBox.TextLength == 0)
+            {
+                label4.BackColor = Color.OrangeRed;
+                label4.ForeColor = Color.White;
+                button6.Enabled = false;
+            }
+
         }
 
         // Переключатель режима шифрования
@@ -1037,6 +1081,7 @@ namespace KMZI
                     label4.Visible = true;
                     groupBox2.Enabled = true;
                     is_gamming = true;
+                    ProgressBar_Reset();
                     Set_Fields_State(false);
                     break;
                 default:
@@ -1045,6 +1090,7 @@ namespace KMZI
                     is_gamming = false;
                     Set_Fields_State(false);
                     label1.Visible = false;
+                    ProgressBar_Reset();
                     label2.Visible = false;
                     label3.Visible = false;
                     label4.Visible = false;
@@ -1186,6 +1232,7 @@ namespace KMZI
             }
         }
 
+        // Кнопка "Сохранить ключ в файл"
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -1218,6 +1265,7 @@ namespace KMZI
             }
         }
 
+        // Кнопка "Сохранить синхропосылку в файл"
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
