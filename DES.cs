@@ -144,6 +144,7 @@ namespace KMZI
             if(inBox.TextLength == 0)
             {
                 MessageBox.Show("Введите текст.", "Ошибка шифрования", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                inFile = null;
                 return;
             }
 
@@ -172,30 +173,30 @@ namespace KMZI
             if (!Check_KeyLength())
                 return;
 
+            // Проверка корректности формата ключа при расшифровании
             if (radioButton2.Checked)
             {
                 if (!Check_KeyCorrectness())
                     return;
             }
 
-            // Если выбран режим шифрования
             if (is_text_from_file == false && inFile == null)
             {
                 inFile = Encoding.Default.GetBytes(inBox.Text);
             }
 
-            // Делаем текст сообщения четным
+            // Делаем текст сообщения четным при шифровании
             if (radioButton1.Checked)
             {
                 InFile_AddBloks();
             }
 
-
             // Формируем раундовый ключ для дальнейшего шифрования
-            BitArray[] key = Perform_Key_Replace_Start(keyBox.Text);
+            BitArray[] key = Generate_Round_Key(keyBox.Text);
 
             outFile = new byte[inFile.Length];
         
+            // Если шифротекст не кратен 8, то его невозможно обработать
             if (radioButton2.Checked)
             {
                 if (inFile.Length % 8 != 0)
@@ -361,7 +362,7 @@ namespace KMZI
             }
 
             // Формируем раундовый ключ для дальнейшего шифрования
-            BitArray[] key = Perform_Key_Replace_Start(keyBox.Text);
+            BitArray[] key = Generate_Round_Key(keyBox.Text);
 
             outFile = new byte[inFile.Length];
 
@@ -382,8 +383,7 @@ namespace KMZI
 
             // Идём по каждому блоку текста (64 бита каждый)
             for (int i = 0; i < inFile.Length; i += 8)
-            {
-                // Выполним стартовую перестановку
+            {                
                 byte[] temp = new byte[8];
                 Array.Copy(inFile, i, temp, 0, temp.Length);
                 var temp_bits = new BitArray(temp);
@@ -398,14 +398,14 @@ namespace KMZI
                         temp_bits.Xor(vector_bits);
                     }
                     else
-                    {
-                        
+                    {                    
                         Array.Copy(outFile, i - 8, temp, 0, temp.Length);                        
                         vector_bits = new BitArray(temp);
                         temp_bits.Xor(vector_bits);
                     }
                 }
 
+                // Выполним стартовую перестановку
                 for (int m = 0; m < temp_bits.Length; m++)
                 {
                     temp_bits2[m] = temp_bits[start_IP[m] - 1];
@@ -563,7 +563,7 @@ namespace KMZI
             }
 
             // Формируем раундовый ключ для дальнейшего шифрования
-            BitArray[] key = Perform_Key_Replace_Start(keyBox.Text);
+            BitArray[] key = Generate_Round_Key(keyBox.Text);
 
             outFile = new byte[inFile.Length];
 
@@ -590,6 +590,7 @@ namespace KMZI
                 var temp_bits = new BitArray(temp);
                 var temp_bits2 = new BitArray(temp);
 
+                // Выработка гаммы
                 if (i == 0)
                 {
                     vector = Encoding.Default.GetBytes(synchroBox.Text);
@@ -712,6 +713,8 @@ namespace KMZI
 
                 Array.Copy(inFile, i, temp, 0, temp.Length);
                 var temp2 = new BitArray(temp);
+                
+                //XOR-им блок текста
                 temp2.Xor(temp_bits2);
 
                 temp2.CopyTo(outFile, i);
@@ -759,7 +762,7 @@ namespace KMZI
             }
 
             // Формируем раундовый ключ для дальнейшего шифрования
-            BitArray[] key = Perform_Key_Replace_Start(keyBox.Text);
+            BitArray[] key = Generate_Round_Key(keyBox.Text);
 
             outFile = new byte[inFile.Length];
 
@@ -908,6 +911,8 @@ namespace KMZI
 
                 Array.Copy(inFile, i, temp, 0, temp.Length);
                 var temp2 = new BitArray(temp);
+
+                // XOR
                 temp2.Xor(temp_bits2);
                 temp_bits2.CopyTo(previous_vector, 0);
                 temp2.CopyTo(outFile, i);
@@ -923,12 +928,8 @@ namespace KMZI
             OutFile_DisplayOnScreen();
         }
         
-        // Подготовка раундового ключа
-        /*1. перестановка битов по таблице
-          2. деление на два блока по 26 бит
-          3. генерация ключей циклическим сдвигом
-          4. перестановка сжатия */
-        private BitArray[] Perform_Key_Replace_Start(string key)
+        // Генерация раундового ключа
+        private BitArray[] Generate_Round_Key(string key)
         {
             int count = 0;
             string binary_key = "";
@@ -952,7 +953,7 @@ namespace KMZI
                 binary_key += temp;
             }
 
-            // Добавление контрольных битов
+            // 1. Добавление контрольных битов (до 64 бит)
             for (int i = 0; i < 64; i++)
             {
                 if(i == 7 || i == 15 || i == 23 || i == 31 || i == 39 || i == 47 || i == 55 || i == 63 )
@@ -960,12 +961,10 @@ namespace KMZI
                     if(count % 2 != 0)
                     {
                         binary_key = binary_key.Insert(i, "0");
-                        //key_bits[i] = false;
                     }
                     else
                     {
                         binary_key = binary_key.Insert(i, "1");
-                        //key_bits[i] = true;
                     }
                     count = 0;
                     continue;
@@ -974,7 +973,7 @@ namespace KMZI
                     count++;             
             }
 
-            // Начальная перестановка ключа
+            // 2. Начальная перестановка ключа (преобразует обратно в 56 бит)
             char[] temp2 = new char[key_replace_start.Length];
             for(int i = 0; i < key_replace_start.Length; i++)
             {
@@ -984,16 +983,16 @@ namespace KMZI
             char[] left_block = new char[28];
             char[] right_block = new char[28];
 
-            // Разбили ключ на 2 блока
+            // 3. Разбили ключ на 2 блока
             Array.Copy(temp2, 0, left_block, 0, 28);
             Array.Copy(temp2, 28, right_block, 0, 28);
 
             char[,] round_key = new char[16, 48]; // Массив под раундовый ключ
 
-            // Делаем раундовый ключ
+            // Делаем подключи
             for (int i = 0; i < 16; i++)
             {
-                // Циклический сдвиг влево на 1-2 бита
+                // 4. Циклический сдвиг влево на 1-2 бита
                 if (i != 0 && i != 1 && i != 8 && i != 15)
                 {
                     char[] temp3 = { left_block[0], left_block[1] };
@@ -1006,7 +1005,7 @@ namespace KMZI
                     int index = 0;
                     for (int j = left_block.Length - 2; j < left_block.Length; j++)
                     {
-                        left_block[j] = temp3[index]; // ТУТ НИЧЕГО НЕ РАБОТАЕТ
+                        left_block[j] = temp3[index];
                         right_block[j] = temp4[index];
                         index++;
                     }
@@ -1024,20 +1023,19 @@ namespace KMZI
                     right_block[right_block.Length - 1] = temp4;
                 }
 
-                // объединяем два блока обратно в один
+                // 5. Объединяем два блока обратно в один
                 char[] temp5 = new char[56];
                 left_block.CopyTo(temp5, 0);
                 right_block.CopyTo(temp5, 28);
 
-                // Производим перестановку сжатия
+                // 6. Производим перестановку сжатия
                 char[] temp6 = new char[key_replace_compress.Length];
                 for (int j = 0; j < key_replace_compress.Length; j++)
                 {
                     temp6[j] = temp5[key_replace_compress[j] - 1];
                 }
 
-                //Результат заносим в массив как элемент раундового ключа
-
+                // 7. Результат заносим в массив как элемент раундового ключа
                 if (radioButton1.Checked)
                 {
                     for (int j = 0; j < temp6.Length; j++)
@@ -1045,6 +1043,7 @@ namespace KMZI
                         round_key[i, j] = temp6[j];
                     }
                 }
+                // При расшифровании ключ будет инвертирован (Не во всех режимах)
                 else if (radioButton2.Checked)
                 {
                     if (!isCFB)
@@ -1064,13 +1063,13 @@ namespace KMZI
                 }
             }
 
+            // Переносим результат генерации в массив другого формата
             BitArray[] key1 = new BitArray[16];
             for (int i = 0; i < key1.Length; i++)
             {
                 key1[i] = new BitArray(48, false);
                 for (int j = 0; j < key1[i].Length; j++)
-                {
-                    // Неизвестно, насколько правильно это работает!!! Похоже, работает
+                {           
                     if (round_key[i, j] == '1')
                         key1[i][j] = true;
                 }
@@ -1714,7 +1713,7 @@ namespace KMZI
                 {
                     byte[] key = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                     string k = Encoding.UTF8.GetString(key);
-                    while (keyBox.TextLength < 32)
+                    while (keyBox.TextLength < 7)
                     {
                         keyBox.Text += k[count % k.Length];
                         count++;
@@ -1753,7 +1752,7 @@ namespace KMZI
             }
         }
 
-        // Кнопка "Сохранить ключ в файл"
+        // Кнопка "Сохранить ключ в файл" из меню
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -1762,7 +1761,7 @@ namespace KMZI
             }
         }
 
-        // Кнопка "Сохранить синхропосылку в файл"
+        // Кнопка "Сохранить синхропосылку в файл" из меню
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)

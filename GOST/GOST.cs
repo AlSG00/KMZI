@@ -66,6 +66,7 @@ namespace KMZI
             if (inBox.TextLength == 0)
             {
                 MessageBox.Show("Введите текст.", "Ошибка шифрования", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                inFile = null;
                 return;
             }
             // Выбор режима работы шифра
@@ -332,19 +333,19 @@ namespace KMZI
             if (!Check_SynchroBox_Length())
                 return;
 
-            if (radioButton2.Checked)
-            {
-                if (!Char.IsDigit(keyBox.Text[0]))
-                {
-                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-                    return;
-                }
-                else if (Convert.ToInt32(keyBox.Text[0].ToString()) > 7)
-                {
-                    MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-                    return;
-                }
-            }
+            //if (radioButton2.Checked)
+            //{
+            //    if (!Char.IsDigit(keyBox.Text[0]))
+            //    {
+            //        MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            //        return;
+            //    }
+            //    else if (Convert.ToInt32(keyBox.Text[0].ToString()) > 7)
+            //    {
+            //        MessageBox.Show("Неверный формат ключа!", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            //        return;
+            //    }
+            //}
 
             // Если входные данные НЕ были загружены из файла, значит массив байтов сейчас пуст 
             // и его необходимо заполнить данными из поля ввода
